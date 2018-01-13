@@ -17,10 +17,12 @@ class CreateGastosTable extends Migration
             $table->increments('id');
             $table->unsignedSmallInteger('user_id');
             $table->unsignedDecimal('cantidad', 10, 2);
-            $table->unsignedDecimal('iva', 10, 2);
             $table->string('concepto');
             $table->string('tipo_gasto_id');
             $table->timestamps();
+
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->foreign('tipo_gasto_id')->references('id')->on('tipo_gastos')->onDelete('cascade');
         });
     }
 

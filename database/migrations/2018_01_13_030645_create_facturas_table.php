@@ -23,6 +23,9 @@ class CreateFacturasTable extends Migration
             $table->unsignedTinyInteger('pagada')->default(0);
             $table->unsignedTinyInteger('persona_fisica')->default(0);
             $table->timestamps();
+
+            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            // $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
 

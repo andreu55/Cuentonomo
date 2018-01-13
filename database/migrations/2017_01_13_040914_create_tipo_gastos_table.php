@@ -17,6 +17,7 @@ class CreateTipoGastosTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('iva');
+            $table->string('icon');
             $table->timestamps();
         });
     }
