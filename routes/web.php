@@ -17,4 +17,4 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/home/{tri?}/{ano?}', 'HomeController@index')->where(['tri' => '[1-4]', 'ano' => '[0-9]+']);
