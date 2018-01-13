@@ -14,7 +14,11 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                    <h2>Facturas!</h2>
+
+                    @foreach ($facturas as $key => $factura)
+                      {{ $factura->num }} <br>
+                    @endforeach
                 </div>
             </div>
         </div>

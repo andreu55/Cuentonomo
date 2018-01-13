@@ -15,6 +15,9 @@ class UsersTableSeeder extends Seeder
             'name' => 'Andreu García Martínez',
             'email' => 'anduwet2@gmail.com',
             'password' => bcrypt('12345'),
+            'dni' => '29196333H',
+            'phone' => '622666125',
+            'address' => 'Calle Cienfuegos 16 - 3'
         ]);
     }
 }
