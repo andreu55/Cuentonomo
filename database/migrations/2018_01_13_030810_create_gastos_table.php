@@ -19,7 +19,7 @@ class CreateGastosTable extends Migration
             $table->unsignedDecimal('cantidad', 10, 2);
             $table->unsignedDecimal('iva', 10, 2);
             $table->string('concepto');
-            $table->string('tipo');
+            $table->string('tipo_gasto_id');
             $table->timestamps();
         });
     }

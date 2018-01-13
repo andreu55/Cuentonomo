@@ -5,7 +5,7 @@
     <div class="row">
         <div class="col-md-8 col-md-offset-2">
             <div class="panel panel-default">
-                <div class="panel-heading">Dashboard</div>
+                <div class="panel-heading">Facturas!</div>
 
                 <div class="panel-body">
                     @if (session('status'))
@@ -14,10 +14,8 @@
                         </div>
                     @endif
 
-                    <h2>Facturas!</h2>
-
                     @foreach ($facturas as $key => $factura)
-                      {{ $factura->num }} <br>
+                      {{ $factura->num }} {{ $factura->client->name }} <br>
                     @endforeach
                 </div>
             </div>
