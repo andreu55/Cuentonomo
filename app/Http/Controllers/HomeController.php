@@ -45,6 +45,7 @@ class HomeController extends Controller
 
         // Cogemos las del trimestre
         $data['trimestre'] = $trimestre;
+        $data['year'] = $year;
         $data['facturas'] = Factura::whereBetween('created_at', [$fecha_ini, $fecha_fin])->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
         $data['gastos'] = Gasto::whereBetween('created_at', [$fecha_ini, $fecha_fin])->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
       }
