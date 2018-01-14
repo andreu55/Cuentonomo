@@ -21,7 +21,7 @@
           @php
 
             // Si es persona física, no le retenemos IRPF
-            if ($f->persona_fisica) { $ret_irpf = 0; }
+            if ($f->client->persona_fisica) { $ret_irpf = 0; }
             else { $ret_irpf = 7; }
 
             // Si hemos especificado horas, calculamos el importe

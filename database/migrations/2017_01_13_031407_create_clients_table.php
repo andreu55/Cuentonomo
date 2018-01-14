@@ -19,6 +19,7 @@ class CreateClientsTable extends Migration
             $table->string('nif', 30);
             $table->string('name');
             $table->string('address');
+            $table->unsignedTinyInteger('persona_fisica')->default(0);
             $table->timestamps();
         });
     }
