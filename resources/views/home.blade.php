@@ -132,24 +132,17 @@
       </div>
 
       <div class="col-md-4">
-        <h2>Resumen IVA</h2>
 
-        <ul class="list-group text-center">
-
-          <?php if ($iva_total && $iva_total_gastos): ?>
-            <li class="list-group-item justify-content-between">
-              <b><?=$trimestre?>º trim:</b>
-              <span class="text-danger">
-                <?= $iva_total ?>€
-              </span><b>-</b>
-              <span class="text-success">
-                <?= $iva_total_gastos ?>€
-              </span><b>=</b>
-              <span class="badge badge-warning badge-pill"><?= number_format(($iva_total - $iva_total_gastos), 2, ".", "") ?> €</span>
-            </li>
-          <?php endif; ?>
-
-        </ul>
+        @if ($iva_total && $iva_total_gastos)
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">Resumen IVA</h5>
+              <h6 class="card-subtitle mb-2 text-muted">{{ $trimestre }}º trimestre</h6>
+              <p class="card-text">Has recibido <b class="text-primary">{{ $iva_total }}€</b> en IVA este trimestre, puedes desgravarte <b class="text-success">{{ $iva_total_gastos }}€</b> gracias a los gastos, debes ingresar en total</p>
+              <div class="card-text"><b class="text-danger">{{ $iva_total - $iva_total_gastos }}€</b></div>
+            </div>
+          </div>
+        @endif
 
       </div>
     </div>
