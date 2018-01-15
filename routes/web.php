@@ -18,3 +18,7 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home/{tri?}/{ano?}', 'HomeController@index')->where(['tri' => '[1-4]', 'ano' => '[0-9]+']);
+Route::get('/new', 'HomeController@new');
+
+Route::post('gasto/nuevo', 'HomeController@gasto_nuevo');
+Route::post('factura/nuevo', 'HomeController@factura_nuevo');

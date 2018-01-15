@@ -49,7 +49,7 @@
     <div id="app">
 
         <nav class="navbar navbar-expand-md navbar-light bg-light fixed-top">
-          <a class="navbar-brand" href="{{ url('/') }}">
+          <a class="navbar-brand" href="{{ url('home') }}">
             {{-- fa-briefcase --}}
             <i class="fa fa-fw fa-moon-o" aria-hidden="true"></i>
             {{ config('app.name') }}
@@ -71,10 +71,9 @@
               <li class="nav-item dropdown">
                 <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
-                  <a class="dropdown-item" href="#">Gastos</a>
-                  <a class="dropdown-item" href="#">Another action</a>
-                  <a class="dropdown-item" href="#">Something else here</a>
-                  <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a>
+                  <a class="dropdown-item" href="{{ url('home') }}"><i class="fa fa-fw fa-pie-chart"></i> Dashboard</a>
+                  <a class="dropdown-item" href="{{ url('new') }}"><i class="fa fa-fw fa-plus"></i> Nuevo</a>
+                  <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-fw fa-sign-out"></i> Logout</a>
                   <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                       {{ csrf_field() }}
                   </form>
@@ -84,7 +83,7 @@
             </ul>
             <div class="form-inline my-2 my-lg-0">
               <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-warning my-2 my-sm-0" type="button" title="Nuevo Gasto"><i class="fa fa-plus"></i></button>
+              <a href="{{ url('new') }}" class="btn btn-outline-warning my-2 my-sm-0" title="Nuevo"><i class="fa fa-plus"></i></a>
             </div>
           </div>
         </nav>

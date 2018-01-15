@@ -138,8 +138,8 @@
             <div class="card-body">
               <h5 class="card-title">Resumen IVA</h5>
               <h6 class="card-subtitle mb-2 text-muted">{{ $trimestre }}º trimestre</h6>
-              <p class="card-text">Has recibido <b class="text-primary">{{ $iva_total }}€</b> en IVA este trimestre, puedes desgravarte <b class="text-success">{{ $iva_total_gastos }}€</b> gracias a los gastos, debes ingresar en total</p>
-              <div class="card-text"><b class="text-danger">{{ $iva_total - $iva_total_gastos }}€</b></div>
+              <p class="card-text">Has recibido <b class="text-primary">{{ $iva_total }}€</b> en IVA este trimestre, puedes desgravarte <b class="text-success">{{ $iva_total_gastos }}€</b> gracias a los gastos, debes ingresar un total de:</p>
+              <h4 class="card-text"><b class="text-warning">{{ $iva_total - $iva_total_gastos }}€</b></h4>
             </div>
           </div>
         @endif
