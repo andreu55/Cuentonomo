@@ -4,12 +4,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="Cuentónomo" />
 
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Mi factura') }}</title>
+    <title>Cuentónomo</title>
+    <meta name='Description' content='Proyecto de generador de facturas php con TCPDF que se me fue de las manos y ahora también hace cuentas.'>
+    <meta name='Keywords' content='Cuentas, Facturas, Autónomo, Gratis'>
 
     <!-- Styles -->
     {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
@@ -52,7 +53,7 @@
           <a class="navbar-brand" href="{{ url('home') }}">
             {{-- fa-briefcase --}}
             <i class="fa fa-fw fa-moon-o" aria-hidden="true"></i>
-            {{ config('app.name') }}
+            Cuentónomo
           </a>
           {{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
