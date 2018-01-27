@@ -17,8 +17,13 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home/{tri?}/{ano?}', 'HomeController@index')->where(['tri' => '[1-4]', 'ano' => '[0-9]+']);
-Route::get('/new', 'HomeController@new');
+Route::get('home/{tri?}/{ano?}', 'HomeController@index')->where(['tri' => '[1-4]', 'ano' => '[0-9]+']);
+Route::get('new', 'HomeController@new');
+
+Route::post('pdf/nuevo', 'HomeController@generaPdf');
 
 Route::post('gasto/nuevo', 'HomeController@gasto_nuevo');
+Route::post('gasto/borrar', 'HomeController@borraGasto');
+
 Route::post('factura/nuevo', 'HomeController@factura_nuevo');
+Route::post('factura/borrar', 'HomeController@borraFactura');

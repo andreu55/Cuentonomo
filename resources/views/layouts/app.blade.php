@@ -54,9 +54,11 @@
             <i class="fa fa-fw fa-moon-o" aria-hidden="true"></i>
             {{ config('app.name') }}
           </a>
-          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
+          {{-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
-          </button>
+          </button> --}}
+
+          <a href="{{ url('new') }}" class="navbar-toggler btn btn-outline-warning my-2 my-sm-0" title="Nuevo"><i class="fa fa-plus"></i></a>
 
           <div class="collapse navbar-collapse" id="navbarsExampleDefault">
             <ul class="navbar-nav mr-auto">

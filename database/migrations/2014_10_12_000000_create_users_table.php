@@ -20,7 +20,13 @@ class CreateUsersTable extends Migration
             $table->string('password')->nullable();
             $table->string('dni')->nullable();
             $table->string('phone')->nullable();
-            $table->string('address')->nullable();
+            $table->string('address_uno')->nullable();
+            $table->string('address_dos')->nullable();
+            $table->unsignedTinyInteger('irpf')->default(7);
+            $table->unsignedTinyInteger('iva')->default(21);
+            $table->string('banco_name')->nullable();
+            $table->string('banco_cuenta')->nullable();
+            $table->string('api_token', 60)->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

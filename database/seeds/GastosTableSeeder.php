@@ -158,6 +158,7 @@ class GastosTableSeeder extends Seeder
             ['user_id' => 1, 'cantidad' => 1.80, 'concepto' => 'Cafetería', 'tipo_gasto_id' => 1, 'created_at' =>'2017-12-29 00:00:00'],
             ['user_id' => 1, 'cantidad' => 63.00, 'concepto' => 'Fuente alimentacion', 'tipo_gasto_id' => 3, 'created_at' =>'2017-11-06 00:00:00'],
             ['user_id' => 1, 'cantidad' => 9.67, 'concepto' => 'Dominio andreugarcia.com', 'tipo_gasto_id' => 2, 'created_at' =>'2017-12-07 00:00:00'],
+            ['user_id' => 1, 'cantidad' => 14.80, 'concepto' => 'Cafetería Savoiardi', 'tipo_gasto_id' => 1, 'created_at' =>'2018-01-13 00:00:00'],
         ]);
     }
 }

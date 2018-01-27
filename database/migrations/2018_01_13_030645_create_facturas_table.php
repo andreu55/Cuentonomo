@@ -18,8 +18,8 @@ class CreateFacturasTable extends Migration
             $table->string('num', 30);
             $table->unsignedSmallInteger('user_id');
             $table->unsignedSmallInteger('client_id')->nullable();
-            $table->unsignedSmallInteger('horas')->default(0);
-            $table->unsignedDecimal('precio', 8, 2);
+            $table->unsignedDecimal('horas', 8, 2)->default(0);
+            $table->unsignedDecimal('precio', 8, 2)->default(15);
             $table->unsignedTinyInteger('pagada')->default(0);
             $table->timestamps();
 

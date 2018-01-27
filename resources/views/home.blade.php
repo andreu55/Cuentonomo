@@ -12,7 +12,26 @@
     <div class="row">
       <div class="col-md-12 col-md-offset-2">
 
-        <h2>Facturas <em class="pull-right">{{ $trimestre }}º Trimestre {{ $year }}</em></h2>
+        <h2>
+          <span class="d-none d-sm-inline">
+            Facturas
+          </span>
+          <em class="pull-right">
+            <a href="{{ url('home/'.$ant_trim.'/'.$ant_year) }}" class="btn my-2 my-sm-0">
+              <i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
+            </a>
+            {{ $trimestre }}º Trimestre {{ $year }}
+            <a href="{{ url('home/'.$sig_trim.'/'.$sig_year) }}" class="btn my-2 my-sm-0">
+              <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
+            </a>
+          </em>
+        </h2>
+
+      </div>
+    </div>
+
+    <div class="row d-none d-sm-block">
+      <div class="col-md-12 col-md-offset-2">
 
         <table class="table">
           <thead>
@@ -25,6 +44,7 @@
               <th scope="col">IVA</th>
               <th scope="col">IRPF</th>
               <th scope="col">Importe</th>
+              <th scope="col"></th>
             </tr>
           </thead>
           <tbody>
@@ -61,15 +81,16 @@
 
               @endphp
 
-              <tr class="table-<?= $f->pagada ? "success" : "danger" ?>">
+              <tr id="factura{{ $f->id }}" class="table-<?= $f->pagada ? "success" : "danger" ?>">
                 <th scope="row">{{ $f->num }}</th>
                 <td>{{ $f->client->name }}</td>
-                <td>{{ $f->created_at->format('Y-m-d') }}</td>
-                <td><b><?=$f->horas?></b> <small><em>x <?=$f->precio?></em></small></td>
-                <td><?=number_format($base, 2)?></td>
-                <td><?=number_format($iva, 2)?></td>
-                <td><?= $irpf ?></td>
-                <td><?= $total ?></td>
+                <td>{{ $f->created_at->format('d/m/Y') }}</td>
+                <td><b>{{ $f->horas }}</b> <small><em>x {{ $f->precio }}</em></small></td>
+                <td>{{ number_format($base, 2) }}</td>
+                <td>{{ number_format($iva, 2) }}</td>
+                <td>{{  $irpf  }}</td>
+                <td>{{  $total  }}</td>
+                <td><button class="btn btn-sm btn-danger pull-right borra-factura" data-id="{{ $f->id }}"><i class="fa fa-fw fa-times"></i></button></td>
               </tr>
             @endforeach
 
@@ -82,6 +103,7 @@
               <td><b class="text-warning">{{ $iva_total }}</b></td>
               <td><b class="text-info">{{ $irpf_total }}</b></td>
               <td><b class="text-default">{{ $total_total }}</b></td>
+              <td></td>
             </tr>
 
           </tbody>
@@ -91,6 +113,7 @@
     </div>
 
     <div class="row">
+
       <div class="col-md-8 col-md-offset-2">
         <h2>Gastos</h2>
 
@@ -116,8 +139,8 @@
             <div class="card-body">
               <h4 class="card-title">
                 <?=$g->concepto?>
-                <em class="text-muted lafecha fw-200">{{ $g->created_at->format('Y-m-d') }}</em>
-                <button class="btn btn-danger pull-right borra-gasto" data-id="<?=$g->id?>"><i class="fa fa-fw fa-times"></i></button>
+                <em class="text-muted lafecha fw-200">{{ $g->created_at->format('d/m/Y') }}</em>
+                <button class="btn btn-sm btn-danger pull-right borra-gasto" data-id="<?=$g->id?>"><i class="fa fa-fw fa-times"></i></button>
               </h4>
               <p class="card-text">
                 <b><?=number_format($g->cantidad, 2)?>€</b> =
@@ -151,61 +174,61 @@
 
 @section('scripts')
 
-  <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
-  <script src="https://www.gstatic.com/charts/loader.js"></script>
-
+  {{-- <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script> --}}
   <script type="text/javascript">
 
-  function drawChart() {
+    $(".borra-gasto").click(function() {
 
-    // Create the data table.
-    var data = new google.visualization.DataTable();
-    data.addColumn('string', 'Topping');
-    data.addColumn('number', 'Slices');
-    // data.addRows([
-    //   <?php// foreach ($suma_tipos_gasto as $tipo => $num): ?>
-    //     ['<?//=$tipo?>', <?//=$num?>],
-    //   <?php// endforeach; ?>
-    // ]);
+      $(this).html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+      var id = $(this).data('id');
 
-    // Set chart options
-    var options = {title:'Total €/Tipo',
-    pieSliceText:'value',
-    width:430,
-    height:300};
+      $.post('{{ url('gasto/borrar') }}',
+      {
+        _token: "{{ csrf_token() }}",
+        id: id
+      },
+      function(data, status){
 
-    // Instantiate and draw our chart, passing in some options.
-    var chart = new google.visualization.PieChart(document.getElementById('chart_div'));
-    chart.draw(data, options);
-  }
+        if (status == "success") {
 
-  function toggle_trimestre(i) {
-    if (i != 1) { $('.trim_1').toggle(); }
-    if (i != 2) { $('.trim_2').toggle(); }
-    if (i != 3) { $('.trim_3').toggle(); }
-    if (i != 4) { $('.trim_4').toggle(); }
-  }
-
-  $(document).ready(function() {
-
-    // Inicializamos la datatable
-    $('#tabla_facturas').DataTable({
-      "order": [[ 0, "desc" ]]
+          if (data.status == '200') {
+            $('#gasto'+id).slideUp();
+          }
+        }
+      });
     });
 
-    toggle_trimestre(<?=$trimestre?>);
+    $(".borra-factura").click(function() {
 
-    // Cargamos los tooltips
-    $('[data-toggle="tooltip"]').tooltip();
+      if (confirm("¿Borrar seguro?")) {
 
+        $(this).html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+        var id = $(this).data('id');
 
-    // Load the Visualization API and the corechart package.
-    google.charts.load('current', {'packages':['corechart']});
+        $.post('{{ url('factura/borrar') }}',
+        {
+          _token: "{{ csrf_token() }}",
+          id: id
+        },
+        function(data, status){
 
-    // Set a callback to run when the Google Visualization API is loaded.
-    google.charts.setOnLoadCallback(drawChart);
+          if (status == "success") {
 
-  });
+            if (data.status == '200') {
+              $('#factura'+id).hide();
+              location.reload();
+            }
+          }
+        });
+      }
+
+    });
+
+    $(document).ready(function() {
+      // Cargamos los tooltips
+      $('[data-toggle="tooltip"]').tooltip();
+    });
+
   </script>
 
 @endsection

@@ -6,7 +6,7 @@
   <div class="jumbotron jumbotron-fluid">
     <div class="container">
       <div class="col">
-        <h1 class="display-3">Gasto guardado!</h1>
+        <h1 class="display-3">Todo guardado!</h1>
         <p class="lead">Enhorabuena! molas mogollón y aqui un Lorem ipsum dolor sit amet, a deserunt mollit anim id est laborum para rellenar</p>
         <hr class="my-4">
         <p>
@@ -18,7 +18,7 @@
         </p>
         <p>
           <p>Ir a todos los pagos</p>
-          <a href="{{ url('') }}" class="btn btn-warning btn-lg btn-block">
+          <a href="{{ url('home') }}" class="btn btn-warning btn-lg btn-block">
             <i class="fa fa-fw fa-list" aria-hidden="true"></i>
             Gestionar
           </a>
@@ -92,7 +92,8 @@
         <div class="tab-pane fade" id="pills-ingreso" role="tabpanel" aria-labelledby="pills-ingreso-tab">
 
 
-          <form action="examples/fac.php" method="post">
+          <form action="{{ url('pdf/nuevo') }}" method="post">
+            {{ csrf_field() }}
             <div class="row">
               <div class="col-12 col-sm-9">
                 <div class="form-group row">
@@ -139,7 +140,7 @@
                   </div>
                 @endforeach
 
-                <a type="submit" class="btn mt-3 btn-sm btn-secondary btn-block" title="Genera pdf" target="_blank">&nbsp; Genera PDF &nbsp;</a>
+                <button type="submit" class="btn btn-sm mt-3 btn-block btn-secondary" title="Genera pdf" target="_blank">Genera PDF</button>
               </div>
             </div>
           </form>
@@ -194,14 +195,14 @@
     {
       _token: "{{ csrf_token() }}",
       id: $('input[name=id]').val(),
-      cliente: $('input[name=cliente]').val(),
+      cliente: $('input[name=cliente]:checked').val(),
       horas: $('input[name=horas]').val(),
       precio: $('input[name=precio]').val(),
       fecha: $('input[name=fecha]').val()
     },
     function(data, status){
 
-      $("#guarda-gasto").html('Guardar');
+      $("#guarda-factura").html('Guardar');
 
       if (data.res == '200') {
         $('#block_inicial').slideUp();
