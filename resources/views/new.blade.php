@@ -53,7 +53,7 @@
           <div class="form-group">
             <label for="cantidad">Cantidad</label>
             <div class="input-group">
-              <input type="number" class="form-control" id="cantidad" step='0.01' value="2.50" required>
+              <input type="number" class="form-control" id="cantidad" step='0.01' value="2" required>
               <div class="input-group-append">
                 <span class="input-group-text"><b>€</b></span>
               </div>
@@ -78,7 +78,7 @@
           </div>
           <div class="form-group">
             <label for="concepto">Concepto</label>
-            <input type="text" class="form-control" id="concepto" value="Cafetería" required>
+            <input type="text" class="form-control" id="concepto" value="Cafetería" onclick="select()" required>
           </div>
           <button id="guarda-gasto" class="btn btn-epic btn-block mb-3 mt-4">Guardar</button>
 
@@ -219,7 +219,7 @@
   $("#refresh").click(function(){
 
     $('#alert_block').html("");
-    $('#cantidad').val("2.50");
+    $('#cantidad').val("2");
     $('#concepto').val("Cafetería");
 
     $('#block_final').slideUp();
