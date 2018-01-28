@@ -13,6 +13,13 @@ use Illuminate\Http\Request;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
+Route::options('{any?}', function ($any) { return response('', 200); })->where('any', '.*'); // Ruta OPTIONS atrapalotodo
+Route::post('/login', 'APIController@login');
+
+Route::group(['middleware' => ['auth:api']], function() {
+
+    Route::post('user', 'APIController@getUser'); // Para loguear por token guardado en el navegador
+
+    Route::post('gasto/nuevo', 'APIController@nuevoGasto');
+
 });
