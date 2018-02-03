@@ -1,5 +1,9 @@
 @extends('layouts.app')
 
+@section('css')
+  {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"> --}}
+@endsection
+
 @section('content')
   <div class="container">
 
@@ -62,7 +66,7 @@
                 else { $ret_irpf = 7; }
 
                 // Si hemos especificado horas, calculamos el importe
-                if ($f->horas) {
+                if ($f->horas != 0.00) {
                   $base = round($f->horas * $f->precio, 2);
                 }
                 // Sino, suponemos que lo que pone en precio es el precio final

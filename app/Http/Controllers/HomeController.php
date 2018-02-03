@@ -15,9 +15,8 @@ use App\Tipo_gasto;
 
 class HomeController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
+    public function __construct() {
+      $this->middleware('auth');
     }
 
     public function index($tri = 0, $ano = 0) {
@@ -136,7 +135,7 @@ class HomeController extends Controller
       return response()->json($res, $res['status']);
     }
 
-    public function factura_nuevo(Request $request) {      
+    public function factura_nuevo(Request $request) {
 
       $id = isset($request->id) ? $request->id : 0;
       $cliente = isset($request->cliente) ? $request->cliente : 0;
@@ -184,14 +183,6 @@ class HomeController extends Controller
       	if (!$concepto) { $concepto = 'Desarrollo web'; }
 
         $cliente = Client::find($request->cliente);
-
-      	// switch ($request->cliente) {
-      	// 	// $cliente = ['B98893639', 'O´Clock Digital Solutions S.L.', 'Avenida Aragón, 30 Bajo', '46021, Valencia'];
-      	// 	case '1': $cliente = ['B98893639', 'O´Clock Digital Solutions S.L.', 'Avenida Aragón, 30 Bajo, Valencia']; break;
-      	// 	case '2': $cliente = ['B96735576', 'TAXO Valoración, S.L.', 'Avda. de Aragón 30 F 13, Valencia']; break;
-      	// 	case '3': $cliente = ['B98537004', 'Nemesis media, S.L', 'Calle Flora 1 9, Valencia']; break;
-      	// 	case '4': $cliente = ['15255691K', 'Jose Ángel Rodriguez González', 'Avenida Aragón, 30 Bajo, Valencia']; break;
-      	// }
 
       	$ultimo_char_nif = substr($cliente->nif, -1);
 
@@ -354,12 +345,16 @@ class HomeController extends Controller
       	<tr>
       	<td colspan="4" align="right">IVA ' . $iva . '%</td>
       	<td align="right">' . number_format(($importe_iva), 2) . '</td>
-      	</tr>
-      	<tr>
-      		<td colspan="4" align="right">IRPF ' . $ret_irpf . '%</td>
-      		<td align="right"> -' . number_format(($importe_irpf), 2) . '</td>
-      	</tr>
-      	<tr>
+      	</tr>';
+
+        if ($importe_irpf) {
+          $html .= '<tr>
+          <td colspan="4" align="right">IRPF ' . $ret_irpf . '%</td>
+          <td align="right"> -' . number_format(($importe_irpf), 2) . '</td>
+          </tr>';
+        }
+
+        $html .= '<tr>
       		<td colspan="4" align="right"><b>Total</b></td>
       		<td align="right"><b>' . number_format(($importe_total), 2) . ' €</b></td>
       	</tr>
@@ -391,5 +386,14 @@ class HomeController extends Controller
 
       //Close and output PDF document
       PDF::Output($nombre_pdf, 'I');
+    }
+
+    public function horas(Request $request) {
+
+      $user = Auth::user();
+      $data['holi'] = 'chau';
+
+      return view('horas', $data);
+
     }
 }

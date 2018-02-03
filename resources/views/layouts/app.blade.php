@@ -9,7 +9,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>Cuentónomo</title>
-    <meta name='Description' content='Proyecto de generador de facturas php con TCPDF que se me fue de las manos y ahora también hace cuentas.'>
+    <meta name='Description' content='Cuentas fáciles para los autónomos. Genera tus facturas.'>
     <meta name='Keywords' content='Cuentas, Facturas, Autónomo, Gratis'>
 
     <!-- Styles -->
@@ -18,7 +18,9 @@
     <meta name="author" content="Andreu garcía" />
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.3/css/bootstrap.min.css" integrity="sha384-Zug+QiDoJOrZ5t4lssLdxGhVrurbmBWopoEl+M6BdEfwnCJZtKxi1KgxUyJq13dy" crossorigin="anonymous">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css">
+
+    @yield('css')
+
     <style media="screen">
       body {
         padding-top: 5rem;
