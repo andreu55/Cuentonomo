@@ -283,7 +283,12 @@ class HomeController extends Controller
       PDF::Cell(90, 0, $user->phone, 0, 1, 'R', 0, '', 1);
 
       PDF::Cell(90, 0, $user->address_dos, 0, 0, 'L', 0, '', 1);
-      PDF::Cell(90, 0, $user->email, 0, 1, 'R', 0, '', 1);
+
+      if (isset($user->email_public) && $user->email_public) {
+        PDF::Cell(90, 0, $user->email_public, 0, 1, 'R', 0, '', 1);
+      } else {
+        PDF::Cell(90, 0, $user->email, 0, 1, 'R', 0, '', 1);
+      }
 
       PDF::Ln();
 
