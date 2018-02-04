@@ -15,12 +15,14 @@ class CreateClientsTable extends Migration
     {
         Schema::create('clients', function (Blueprint $table) {
             $table->increments('id');
-            $table->unsignedSmallInteger('user_id');
+            $table->unsignedInteger('user_id');
             $table->string('nif', 30);
             $table->string('name');
             $table->string('address');
             $table->unsignedTinyInteger('persona_fisica')->default(0);
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

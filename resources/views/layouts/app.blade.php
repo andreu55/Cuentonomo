@@ -78,6 +78,7 @@
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
                   <a class="dropdown-item" href="{{ url('home') }}"><i class="fa fa-fw fa-pie-chart"></i> Dashboard</a>
                   <a class="dropdown-item" href="{{ url('new') }}"><i class="fa fa-fw fa-plus"></i> Nuevo</a>
+                  <a class="dropdown-item" href="{{ url('horas') }}"><i class="fa fa-fw fa-clock-o"></i> Horas</a>
                   <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fa fa-fw fa-sign-out"></i> Logout</a>
                   <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                       {{ csrf_field() }}

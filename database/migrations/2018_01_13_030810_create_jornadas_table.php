@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGastosTable extends Migration
+class CreateJornadasTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,16 +13,17 @@ class CreateGastosTable extends Migration
      */
     public function up()
     {
-        Schema::create('gastos', function (Blueprint $table) {
+        Schema::create('jornadas', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');
-            $table->unsignedDecimal('cantidad', 10, 2);
-            $table->string('concepto');
-            $table->string('tipo_gasto_id');
-            $table->timestamps();
+            $table->unsignedInteger('client_id')->nullable();
+            $table->time('entrada')->nullable();
+            $table->time('salida')->nullable();
+            $table->string('notas')->nullable();
+            $table->date('fecha');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            // $table->foreign('tipo_gasto_id')->references('id')->on('tipo_gastos')->onDelete('cascade');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
 
@@ -33,6 +34,6 @@ class CreateGastosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('gastos');
+        Schema::dropIfExists('jornadas');
     }
 }

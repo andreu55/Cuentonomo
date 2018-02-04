@@ -29,5 +29,6 @@ class User extends Authenticatable
 
     public function facturas(){ return $this->hasMany('App\Factura'); }
     public function clients(){ return $this->hasMany('App\Client'); }
-    public function gastos(){ return $this->hasMany('App\Gasto'); }    
+    public function gastos(){ return $this->hasMany('App\Gasto'); }
+    public function jornadas(){ return $this->hasMany('App\Jornada'); }
 }

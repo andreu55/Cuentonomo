@@ -16,15 +16,15 @@ class CreateFacturasTable extends Migration
         Schema::create('facturas', function (Blueprint $table) {
             $table->increments('id');
             $table->string('num', 30);
-            $table->unsignedSmallInteger('user_id');
-            $table->unsignedSmallInteger('client_id')->nullable();
+            $table->unsignedInteger('user_id');
+            $table->unsignedInteger('client_id')->nullable();
             $table->unsignedDecimal('horas', 8, 2)->default(0);
             $table->unsignedDecimal('precio', 8, 2)->default(15);
             $table->unsignedTinyInteger('pagada')->default(0);
             $table->timestamps();
 
-            // $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            // $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
         });
     }
 

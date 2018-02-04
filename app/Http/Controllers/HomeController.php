@@ -6,12 +6,14 @@ use Illuminate\Http\Request;
 
 use Auth;
 use PDF;
+use DB;
 
 use App\User;
 use App\Client;
 use App\Factura;
 use App\Gasto;
 use App\Tipo_gasto;
+use App\Jornada;
 
 class HomeController extends Controller
 {
@@ -393,12 +395,81 @@ class HomeController extends Controller
       PDF::Output($nombre_pdf, 'I');
     }
 
-    public function horas(Request $request) {
+    public function horas() {
 
       $user = Auth::user();
-      $data['holi'] = 'chau';
 
-      return view('horas', $data);
+      $horas_dia = 8;
+      $dias = $horas_reales = $minutos_reales = 0;
+      $jornadas = $user->jornadas()->where('client_id', 2)->get();
 
+      // Para cada jornada, restamos la hora de salida a la de entrada y tenemos las horas trabajadasese dia
+      foreach ($jornadas as $j) {
+
+        if ($j->salida && $j->entrada) {
+
+
+          $entrada = new \DateTime($j->entrada);
+          $salida = new \DateTime($j->salida);
+
+          $resta = $entrada->diff($salida);
+          $horas = $resta->format('%h');
+          $minutos = $resta->format('%i');
+
+          // Guardamos las horas trabajadas en un contador
+          $horas_reales += $horas;
+          $minutos_reales += $minutos;
+
+          if ($minutos_reales >= 60) {
+            $minutos_reales = $minutos_reales - 60;
+            $horas_reales++;
+          }
+
+          // Contamos los dias trabajados
+          $dias++;
+        }
+      }
+
+      // Calculamos las horas que 'deberiamos' haber hecho
+      $horas_totales = $dias * $horas_dia;
+      
+      $data['balance']['horas'] = $horas_reales - $horas_totales;
+      $data['balance']['minutos'] = $minutos_reales;
+      $data['horas_dia'] = $horas_dia;
+
+      $data['ult_jornadas'] = $user->jornadas()->where('client_id', 2)->orderBy('fecha', 'desc')->take(5)->get();
+
+      return view('jornadas', $data);
+    }
+
+    public function guardaJornada(Request $request) {
+
+      $user = Auth::user();
+      $hora = isset($request->hora) ? $request->hora : 0;
+      $fecha = isset($request->fecha) ? $request->fecha : date('Y-m-d');
+      $client = isset($request->client) ? $request->client : 2;
+      $entrada = isset($request->entrada) ? $request->entrada : 0;
+
+      if ($hora && $fecha) {
+
+        // $fila = Jornada::where('user_id', $user->id)->where('client_id', $client)->where('fecha', $fecha)->first();
+        $fila = $user->jornadas()->where('client_id', $client)->where('fecha', $fecha)->first();
+
+        if (!$fila) {
+          $fila = new Jornada();
+          $fila->user_id = $user->id;
+          $fila->fecha = $fecha;
+          $fila->client_id = $client;
+        }
+
+        if ($entrada) { $fila->entrada = $hora . ":00"; }
+        else { $fila->salida = $hora . ":00"; }
+
+        $fila->save();
+      }
+
+      $res['msj'] = 'exito';
+
+      return response()->json($res, 200);
     }
 }
