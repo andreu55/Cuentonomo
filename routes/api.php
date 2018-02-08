@@ -21,5 +21,6 @@ Route::group(['middleware' => ['auth:api']], function() {
     Route::post('user', 'APIController@getUser'); // Para loguear por token guardado en el navegador
 
     Route::post('gasto/nuevo', 'APIController@nuevoGasto');
+    Route::post('gasto/borrar', 'APIController@borraGasto');
 
 });
