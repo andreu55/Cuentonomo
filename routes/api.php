@@ -22,5 +22,6 @@ Route::group(['middleware' => ['auth:api']], function() {
 
     Route::post('gasto/nuevo', 'APIController@nuevoGasto');
     Route::post('gasto/borrar', 'APIController@borraGasto');
+    Route::post('gastos/get', 'APIController@getGastos');
 
 });

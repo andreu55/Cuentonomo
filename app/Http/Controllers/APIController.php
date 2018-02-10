@@ -82,6 +82,7 @@ class APIController extends Controller {
 
     return response()->json($res, $status);
   }
+
   public function getUser(Request $request) {
 
     $data['msj'] = "¡Bienvenido de nuevo!";
@@ -110,6 +111,37 @@ class APIController extends Controller {
     // $res['areas'] = Area::todas();
 
     return $res;
+  }
+
+  public function getGastos(Request $request) {
+
+    // $user = $request->user();
+
+    $gastos = $request->user()->gastos()->take(15)->orderBy('id', 'DESC')->orderBy('created_at', 'DESC')->get();
+    $gastos_aux = [];
+
+    foreach ($gastos as $key => $gasto) {
+
+      $total = $gasto->cantidad;
+      $iva = $gasto->tipo_gasto->iva;
+
+      $base = $total / ($iva + 1);
+      $desgr = $base * $iva;
+
+      $gastos_aux[$key]['id'] = $gasto->id;
+      $gastos_aux[$key]['total'] = $total;
+      $gastos_aux[$key]['base'] = number_format($base, 2);
+      $gastos_aux[$key]['desgr'] = number_format($desgr, 2);
+      $gastos_aux[$key]['iva'] = number_format($gasto->tipo_gasto->iva, 2);
+      $gastos_aux[$key]['concepto'] = $gasto->concepto;
+      $gastos_aux[$key]['fecha'] = $gasto->created_at->format('d/m/Y');
+    }
+
+    $res['gastos'] = $gastos_aux;
+    $res['status'] = "success";
+    $status = 200;
+
+    return response()->json($res, $status);
   }
 
   public function nuevoGasto(Request $request) {
