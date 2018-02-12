@@ -408,7 +408,6 @@ class HomeController extends Controller
 
         if ($j->salida && $j->entrada) {
 
-
           $entrada = new \DateTime($j->entrada);
           $salida = new \DateTime($j->salida);
 
@@ -432,12 +431,12 @@ class HomeController extends Controller
 
       // Calculamos las horas que 'deberiamos' haber hecho
       $horas_totales = $dias * $horas_dia;
-      
+
       $data['balance']['horas'] = $horas_reales - $horas_totales;
       $data['balance']['minutos'] = $minutos_reales;
       $data['horas_dia'] = $horas_dia;
 
-      $data['ult_jornadas'] = $user->jornadas()->where('client_id', 2)->orderBy('fecha', 'desc')->take(5)->get();
+      $data['ult_jornadas'] = $user->jornadas()->where('client_id', 2)->orderBy('fecha', 'desc')->take(30)->get();
 
       return view('jornadas', $data);
     }

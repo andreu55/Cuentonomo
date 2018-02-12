@@ -5,7 +5,7 @@
   <style media="screen">
     @import url(https://fonts.googleapis.com/css?family=BenchNine:700);
     .omg_button {
-      background-color: #c47135;
+      background-color: #1ABC9C;
       border: none;
       color: #ffffff;
       cursor: pointer;
@@ -36,7 +36,7 @@
     }
 
     .omg_button:before {
-      border-color: #c47135;
+      border-color: #16A085;
       border-left-width: 2px;
       border-top-width: 2px;
       left: -5px;
@@ -45,7 +45,7 @@
 
     .omg_button:after {
       border-bottom-width: 2px;
-      border-color: #c47135;
+      border-color: #16A085;
       border-right-width: 2px;
       bottom: -5px;
       right: -5px;
@@ -53,7 +53,7 @@
 
     .omg_button:hover,
     .omg_button.hover {
-      background-color: #c47135;
+      background-color: #16A085;
     }
 
     .omg_button:hover:before,
@@ -85,10 +85,10 @@
 
         <div class="row text-center mb-5">
           <div class="col">
-            <button class="guardaHora omg_button btn-block" data-entrada="1" type="button">Entrada</button>
+            <button class="guardaHora omg_button btn-block" data-entrada="1" type="button"><i class="fa fa-fw fa-sign-in"></i> Entrada</button>
           </div>
           <div class="col">
-            <button class="guardaHora omg_button btn-block" data-entrada="0" type="button">Salida</button>
+            <button class="guardaHora omg_button btn-block" data-entrada="0" type="button">Salida <i class="fa fa-fw fa-sign-out"></i></button>
           </div>
         </div>
 
@@ -116,8 +116,10 @@
                 $minutos = $resta->format('%i');
                 $bal = $horas - 8;
                 if ($minutos) {
+                  // Deberíamos pasarlo todo a minutos y restar correctamente, esto es un apaño
                   if ($bal < 0) {
-                    $minutos = $minutos - 30;
+                    if ($minutos == 45) { $minutos = $minutos - 30; }
+                    elseif ($minutos == 15) { $minutos = $minutos + 30; }
                   }
                   $bal .= ":" . $minutos;
                 }
@@ -127,14 +129,18 @@
               <li class="list-group-item" title="{{ $jornada->client->name }}">
                 De <b class="text-info">{{ $jornada->entrada ? $entrada->format('H:i') : '??' }}</b>
                 a <b class="text-primary">{{ $jornada->salida ? $salida->format('H:i') : '??' }}</b>
-                <small>{{ $jornada->notas ? '(' . $jornada->notas . ')' : '' }}</small>
+                @if ($jornada->notas)
+                  <small style="vertical-align:text-top">
+                    <i class="fa fa-fw fa-question-circle-o" data-toggle="tooltip" data-placement="top" title="{{ $jornada->notas }}"></i>
+                  </small>
+                @endif
                 <em class="pull-right">
-                  <small class="{{ $bal >= 0 ? 'text-success' : 'text-danger' }}">
-                    <b>{{ $bal >= 0 ? '+' : '' }}{{ $bal }}</b>
+                  <small class="text-muted">
+                    {{ date('d l', strtotime($jornada->fecha)) }}
                   </small>
                   &nbsp;
-                  <small class="text-muted">
-                    {{ date('d F', strtotime($jornada->fecha)) }}
+                  <small class="{{ $bal >= 0 ? 'text-success' : 'text-danger' }}">
+                    <b>{{ $bal >= 0 ? '+' : '' }}{{ $bal }}</b>
                   </small>
                 </em>
               </li>
@@ -182,6 +188,8 @@
 
     $(document).ready(function(){
       $('#laHora').timepicker('setTime', new Date());
+
+      $('[data-toggle="tooltip"]').tooltip()
     });
 
   </script>
