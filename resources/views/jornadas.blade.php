@@ -112,14 +112,14 @@
                 $entrada = new DateTime($jornada->entrada);
                 $salida = new DateTime($jornada->salida);
                 $resta = $entrada->diff($salida);
-                $horas = $resta->format('%h');
-                $minutos = $resta->format('%i');
+                $horas = $resta->h;
+                $minutos = $resta->i;
                 $bal = $horas - 8;
                 if ($minutos) {
                   // Deberíamos pasarlo todo a minutos y restar correctamente, esto es un apaño
                   if ($bal < 0) {
                     if ($minutos == 45) { $minutos = $minutos - 30; }
-                    elseif ($minutos == 15) { $minutos = $minutos + 30; }
+                    elseif ($minutos == 15) { $minutos = $minutos + 30; $bal = $bal + 1; }
                   }
                   $bal .= ":" . $minutos;
                 }
