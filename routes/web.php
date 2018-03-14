@@ -29,4 +29,6 @@ Route::post('gasto/borrar', 'HomeController@borraGasto');
 Route::post('factura/nuevo', 'HomeController@factura_nuevo');
 Route::post('factura/borrar', 'HomeController@borraFactura');
 
+Route::post('cliente/nuevo', 'HomeController@nuevoCliente');
+
 Route::post('jornada/guardar', 'HomeController@guardaJornada');

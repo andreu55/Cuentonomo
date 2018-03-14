@@ -105,5 +105,10 @@
 
     @yield('scripts')
 
+    <script type="text/javascript">
+      // Cargamos los tooltips on ready
+      $(function() { $('[data-toggle="tooltip"]').tooltip(); });
+    </script>
+
 </body>
 </html>

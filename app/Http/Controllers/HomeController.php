@@ -63,8 +63,11 @@ class HomeController extends Controller
 
     public function new() {
 
+      $user = Auth::user();
+
       $data['tipo_gastos'] = Tipo_gasto::get();
-      $data['clients'] = Client::get();
+      $data['clients'] = $user->clients;
+      // Client::where('')->get();
 
       return view('new', $data);
     }
@@ -164,9 +167,12 @@ class HomeController extends Controller
           $factura->created_at = $fecha;
         $factura->save();
 
+
+
         return response()->json([
           'res' => 200,
-          'msj' => 'Ok'
+          'msj' => 'Ok',
+          // 'pdf' => $this->generaPdf($request)
         ]);
       }
     }
@@ -470,5 +476,31 @@ class HomeController extends Controller
       $res['msj'] = 'exito';
 
       return response()->json($res, 200);
+    }
+
+    public function nuevoCliente(Request $request) {
+
+      $nif = $request->nif ?? '';
+      $name = $request->name ?? '';
+      $address = $request->address ?? '';
+      $persona_fisica = isset($request->persona_fisica) ? 1 : 0;
+
+      if (!$nif || !$name || !$address) {
+        return response()->json([
+            'res' => 400,
+            'msj' => 'Faltan datos!'
+        ]);
+      } else {
+
+        $client = new Client();
+          $client->nif = $nif;
+          $client->user_id = Auth::id();
+          $client->name = $name;
+          $client->address = $address;
+          $client->persona_fisica = $persona_fisica;
+        $client->save();
+
+        return back();
+      }
     }
 }

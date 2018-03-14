@@ -91,61 +91,164 @@
         {{-- INGRESO / CREACION DE FACTURAS --}}
         <div class="tab-pane fade" id="pills-ingreso" role="tabpanel" aria-labelledby="pills-ingreso-tab">
 
-
-          <form action="{{ url('pdf/nuevo') }}" method="post">
+          <form action="{{ url('pdf/nuevo') }}" method="post" target="_blank">
             {{ csrf_field() }}
             <div class="row">
               <div class="col-12 col-sm-9">
                 <div class="form-group row">
-                  <label for="id" class="col-2 col-form-label">ID factura</label>
-                  <div class="col-10">
-                    <input class="form-control" type="text" value="1" name="id">
-                  </div>
-                </div>
-                <div class="form-group row">
-                  <label for="horas" class="col-2 col-form-label">
-                    Horas
-                    <i class="fa fa-fw fa-question-circle text-muted" aria-hidden="true" data-toggle="tooltip" data-placement="right" title="Dejar a 0 para consierar el precio como valor final"></i>
+                  <label class="col-sm-2 col-form-label text-right d-none d-sm-block">
+                    <b>Nº factura</b>
                   </label>
-                  <div class="col-10">
-                    <input class="form-control" type="number" step="0.01" value="100" name="horas">
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-fw fa-info" aria-hidden="true"></i></span>
+                      </div>
+                      <input class="form-control" type="text" value="1" name="id">
+                    </div>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="horas" class="col-2 col-form-label">Precio</label>
-                  <div class="col-10">
+                  <label class="col-sm-2 col-form-label text-right d-none d-sm-block">
+                    <i class="fa fa-fw fa-question-circle text-muted" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Dejar a 0 para consierar el precio como valor final"></i>
+                    <b>Horas</b>
+                  </label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-fw fa-clock-o" aria-hidden="true"></i></span>
+                      </div>
+                      <input class="form-control" type="number" step="0.01" value="100" name="horas">
+                    </div>
+                  </div>
+                </div>
+                <div class="form-group row">
+                  <label class="col-sm-2 col-form-label text-right d-none d-sm-block">
+                    <b>Precio</b>
+                  </label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-fw fa-usd" aria-hidden="true"></i></span>
+                      </div>
                     <input class="form-control" type="number" step="0.01" value="15" name="precio">
+                    </div>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="fecha" class="col-2 col-form-label">Fecha</label>
-                  <div class="col-10">
+                  <label class="col-sm-2 col-form-label text-right d-none d-sm-block">
+                    <b>Fecha</b>
+                  </label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-fw fa-calendar-o" aria-hidden="true"></i></span>
+                      </div>
                     <input class="form-control" type="date" value="<?=date('Y-m-d')?>" name="fecha">
+                    </div>
                   </div>
                 </div>
                 <div class="form-group row">
-                  <label for="id" class="col-2 col-form-label">Concepto</label>
-                  <div class="col-10">
+                  <label class="col-sm-2 col-form-label text-right d-none d-sm-block">
+                    <b>Concepto</b>
+                  </label>
+                  <div class="col-sm-10">
+                    <div class="input-group">
+                      <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-fw fa-quote-right" aria-hidden="true"></i></span>
+                      </div>
                     <input class="form-control" type="text" value="Desarrollo aplicaciones y mantenimiento web" name="concepto">
+                    </div>
                   </div>
                 </div>
               </div>
               <div class="col-12 col-sm-3">
+                <h5 for="select-cliente">
+                  <i class="fa fa-fw fa-user" aria-hidden="true"></i>
+                  Cliente
+                  <span class="pull-right">
+                    <a href="#" class="btn btn-sm btn-outline-warning" title="Nuevo cliente" data-toggle="modal" data-target="#nuevoCliente"><i class="fa fa-plus"></i></a>
+                  </span>
+                </h5>
 
-                @foreach ($clients as $client)
+                <select class="custom-select mt-2" id="select-cliente" name="cliente">
+                  @foreach ($clients as $client)
+                    <option value="{{ $client->id }}" {{ $client->id == 2 ? 'selected' : '' }}>{{ $client->name }}</option>
+                  @endforeach
+                </select>
+
+                {{-- @foreach ($clients as $client)
                   <div class="form-check">
                     <label class="form-check-label">
                       <input class="form-check-input" type="radio" name="cliente" value="{{ $client->id }}" {{ $client->id == 2 ? 'checked' : '' }}> {{ $client->name }}
                     </label>
                   </div>
-                @endforeach
+                @endforeach --}}
 
-                <button type="submit" class="btn btn-sm mt-3 btn-block btn-secondary" title="Genera pdf" target="_blank">Genera PDF</button>
+                <button type="submit" class="btn btn-sm mt-3 btn-block btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Nueva ventana">Ver Factura <i class="fa fa-fw fa-external-link" aria-hidden="true"></i></button>
+
+                <button id="guarda-factura" class="btn btn-epic btn-block mb-3 mt-2">Guardar ingreso</button>
               </div>
             </div>
           </form>
 
-          <button id="guarda-factura" class="btn btn-epic btn-block mb-3 mt-4">Guardar</button>
+
+
+          <!-- Modal -->
+          <div class="modal fade" id="nuevoCliente" tabindex="-1" role="dialog" aria-labelledby="nuevoClienteLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+              <div class="modal-content">
+
+              <form action="{{ url('cliente/nuevo') }}" method="post">
+                {{ csrf_field() }}
+
+                <div class="modal-header">
+                  <h5 class="modal-title" id="nuevoClienteLabel">
+                    <i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+                    Añadir nuevo cliente
+                  </h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <div class="col-12">
+
+                    <label class="col-form-label">
+                      <i class="fa fa-fw fa-user" aria-hidden="true"></i>
+                      Nombre
+                    </label>
+                    <input class="form-control" type="text" placeholder="Andreu García Martínez" name="name">
+
+                    <label class="col-form-label">
+                      <i class="fa fa-fw fa-info" aria-hidden="true"></i>
+                      NIF
+                    </label>
+                    <input class="form-control" type="text" placeholder="12345678Z" name="nif">
+
+                    <label class="col-form-label">
+                      <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i>
+                      Dirección fiscal
+                    </label>
+                    <input class="form-control" type="text" placeholder="C/ Falsa 123" name="address">
+
+                    <div class="custom-control custom-checkbox mt-3">
+                      <input type="checkbox" class="custom-control-input" id="persona_fisica_check" name="persona_fisica">
+                      <label class="custom-control-label" for="persona_fisica_check">Es un particular?</label>
+                    </div>
+
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fa fa-fw fa-plus" aria-hidden="true"></i>
+                    Crear
+                  </button>
+                </div>
+              </form>
+              </div>
+            </div>
+          </div>
 
         </div>
       </div>
@@ -159,7 +262,7 @@
 
   <script>
 
-  $("#guarda-gasto").click(function(){
+  $("#guarda-gasto").click(function() {
 
     $(this).html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
 
@@ -187,7 +290,7 @@
     });
   });
 
-  $("#guarda-factura").click(function(){
+  $("#guarda-factura").click(function() {
 
     $(this).html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
 

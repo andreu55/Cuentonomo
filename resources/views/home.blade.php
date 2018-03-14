@@ -228,11 +228,6 @@
 
     });
 
-    $(document).ready(function() {
-      // Cargamos los tooltips
-      $('[data-toggle="tooltip"]').tooltip();
-    });
-
   </script>
 
 @endsection
