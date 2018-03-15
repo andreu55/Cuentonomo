@@ -19,9 +19,12 @@ Auth::routes();
 
 Route::get('home/{tri?}/{ano?}', 'HomeController@index')->where(['tri' => '[1-4]', 'ano' => '[0-9]+']);
 Route::get('new', 'HomeController@new');
+Route::get('user', 'HomeController@user');
 Route::get('horas', 'HomeController@horas');
 
 Route::post('pdf/nuevo', 'HomeController@generaPdf');
+
+Route::post('user/editar', 'HomeController@editaUserField');
 
 Route::post('gasto/nuevo', 'HomeController@gasto_nuevo');
 Route::post('gasto/borrar', 'HomeController@borraGasto');

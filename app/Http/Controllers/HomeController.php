@@ -72,6 +72,53 @@ class HomeController extends Controller
       return view('new', $data);
     }
 
+    public function user() {
+
+      $user = Auth::user();
+
+      // $campos[] = new \stdClass();
+
+      $data['campos'] = [
+        ['tipo' => 'text', 'campo_db' => 'name', 'nombre' => 'Nombre'],
+        ['tipo' => 'text', 'campo_db' => 'email', 'nombre' => 'Email'],
+        ['tipo' => 'text', 'campo_db' => 'email_public', 'nombre' => 'Email público'],
+        ['tipo' => 'text', 'campo_db' => 'dni', 'nombre' => 'NIF / DNI'],
+        ['tipo' => 'text', 'campo_db' => 'phone', 'nombre' => 'Teléfono'],
+        ['tipo' => 'text', 'campo_db' => 'address_uno', 'nombre' => 'Dirección'],
+        ['tipo' => 'text', 'campo_db' => 'address_dos', 'nombre' => 'Dirección (2ª línea)'],
+        ['tipo' => 'number', 'campo_db' => 'irpf', 'nombre' => 'IRPF'],
+        ['tipo' => 'number', 'campo_db' => 'iva', 'nombre' => 'IVA'],
+        ['tipo' => 'text', 'campo_db' => 'banco_name', 'nombre' => 'Nombre del banco'],
+        ['tipo' => 'text', 'campo_db' => 'banco_cuenta', 'nombre' => 'Nº de cuenta'],
+      ];
+
+      $data['user'] = $user;
+      $data['clients'] = $user->clients;
+      // $data['tipo_gastos'] = Tipo_gasto::get();
+
+      return view('user', $data);
+    }
+
+    public function editaUserField(Request $request) {
+
+      $campo = $request->campo ?? '';
+      $valor = $request->valor ?? '';
+      $user = Auth::user();
+
+      if ($campo) {
+
+        $user->$campo = $valor;
+        $user->save();
+
+        $res['msj'] = 'Guardado!';
+        $status = 200;
+
+      } else { $status = 406; $res['error'] = 'Falta el campo'; }
+
+      return response()->json($res, $status);
+
+    }
+
     public function gasto_nuevo(Request $request) {
 
       $cantidad = isset($request->cantidad) ? $request->cantidad : 0;

@@ -74,8 +74,9 @@
                 </li>
               @else
               <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</a>
+                <a href="#" class="nav-link dropdown-toggle" id="dropdown01" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{ Auth::user()->name }}</a>
                 <div class="dropdown-menu" aria-labelledby="dropdown01">
+                  <a class="dropdown-item" href="{{ url('user') }}"><i class="fa fa-fw fa-user"></i> Tus datos</a>
                   <a class="dropdown-item" href="{{ url('home') }}"><i class="fa fa-fw fa-pie-chart"></i> Dashboard</a>
                   <a class="dropdown-item" href="{{ url('new') }}"><i class="fa fa-fw fa-plus"></i> Nuevo</a>
                   <a class="dropdown-item" href="{{ url('horas') }}"><i class="fa fa-fw fa-clock-o"></i> Horas</a>
