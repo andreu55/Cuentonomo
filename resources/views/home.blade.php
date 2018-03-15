@@ -2,15 +2,11 @@
 
 @section('css')
 
-  {{-- <style>
-    .btn-ok {
-      transition: all 0.3s ease-out 0s;
+  <style>
+    .tr-tabla, .tr-tabla>td, .tr-tabla>th {
+      transition: all 1.5s ease;
     }
-    .btn-ok:hover {
-      box-shadow: inset 0 0 0 5px #008000;
-      background-color: #c3e6cb;
-    }
-  </style> --}}
+  </style>
 
 @endsection
 
@@ -95,7 +91,7 @@
 
               @endphp
 
-              <tr id="factura{{ $f->id }}" class="table-<?= $f->pagada ? "success" : "danger" ?>">
+              <tr id="factura{{ $f->id }}" class="tr-tabla table-<?= $f->pagada ? "success" : "danger" ?>">
                 <th scope="row">{{ $f->num }}</th>
                 <td>{{ $f->client->name }}</td>
                 <td>{{ $f->created_at->format('d/m/Y') }}</td>
@@ -105,8 +101,8 @@
                 <td>{{  $irpf  }}</td>
                 <td>{{  $total  }}</td>
                 <td class="pull-right">
-                  <button class="btn btn-sm btn-success aprueba-factura mr-1" data-id="{{ $f->id }}"><i class="fa fa-fw fa-check"></i></button>
-                  <button class="btn btn-sm btn-danger borra-factura" data-id="{{ $f->id }}"><i class="fa fa-fw fa-times"></i></button>
+                  <button class="btn btn-sm btn-success pagada-factura mr-1" data-id="{{ $f->id }}"><i class="fa fa-fw fa-<?= $f->pagada ? "undo" : "check" ?>"></i></button>
+                  <button class="btn btn-sm btn-danger borra-factura" data-id="{{ $f->id }}"><i class="fa fa-fw fa-trash-o"></i></button>
                 </td>
               </tr>
             @endforeach
@@ -241,28 +237,35 @@
 
     });
 
-    $(".aprueba-factura").click(function() {
+    $(".pagada-factura").click(function() {
 
-      if (confirm("¿Has recibido el pago?")) {
+      if (confirm("¿Modificar estado?")) {
 
-        $(this).html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+        var btn = $(this);
         var id = $(this).data('id');
 
-        // $.post('{{ url('factura/aprobar') }}',
-        // {
-        //   _token: "{{ csrf_token() }}",
-        //   id: id
-        // },
-        // function(data, status){
-        //
-        //   if (status == "success") {
-        //
-        //     if (data.status == '200') {
-        //       $('#factura'+id).hide();
-        //       location.reload();
-        //     }
-        //   }
-        // });
+        btn.html('<i class="fa fa-fw fa-refresh fa-spin"></i>');
+
+
+        $.post('{{ url('factura/pagada') }}',
+        {
+          _token: "{{ csrf_token() }}",
+          id: id
+        },
+        function(data, status) {
+
+
+          if (status == "success") {
+
+            if (data.pagada) {
+              btn.html('<i class="fa fa-fw fa-undo"></i>');
+              $('#factura' + id).removeClass('table-danger').addClass('table-success');
+            } else {
+              btn.html('<i class="fa fa-fw fa-check"></i>');
+              $('#factura' + id).removeClass('table-success').addClass('table-danger');
+            }
+          }
+        });
       }
 
     });

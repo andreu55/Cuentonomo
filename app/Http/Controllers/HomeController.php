@@ -177,6 +177,36 @@ class HomeController extends Controller
       }
     }
 
+    public function pagadaFactura(Request $request) {
+
+      $user = Auth::user();
+      $id = $request->id ?? 0;
+
+      if ($id) {
+        if ($user->facturas->contains($id)) {
+          if ($factura = Factura::find($id)) {
+
+            if ($factura->pagada) {
+              $factura->pagada = 0;
+              $res['pagada'] = 0;
+            }
+            else {
+              $factura->pagada = 1;
+              $res['pagada'] = 1;
+            }
+
+            $factura->save();
+
+            $status = 200;
+            $res['msj'] = 'Estado de factura modificado correctamente';
+
+          } else { $status = 406; $res['error'] = 'Factura no encontrada'; }
+        } else { $status = 406; $res['error'] = 'Esta factura no es tuya'; }
+      } else { $status = 406; $res['error'] = 'Falta id de factura'; }
+
+      return response()->json($res, $status);
+    }
+
     public function generaPdf(Request $request) {
 
       $user = Auth::user();
