@@ -1,7 +1,17 @@
 @extends('layouts.app')
 
 @section('css')
-  {{-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"> --}}
+
+  {{-- <style>
+    .btn-ok {
+      transition: all 0.3s ease-out 0s;
+    }
+    .btn-ok:hover {
+      box-shadow: inset 0 0 0 5px #008000;
+      background-color: #c3e6cb;
+    }
+  </style> --}}
+
 @endsection
 
 @section('content')
@@ -94,7 +104,10 @@
                 <td>{{ number_format($iva, 2) }}</td>
                 <td>{{  $irpf  }}</td>
                 <td>{{  $total  }}</td>
-                <td><button class="btn btn-sm btn-danger pull-right borra-factura" data-id="{{ $f->id }}"><i class="fa fa-fw fa-times"></i></button></td>
+                <td class="pull-right">
+                  <button class="btn btn-sm btn-success aprueba-factura mr-1" data-id="{{ $f->id }}"><i class="fa fa-fw fa-check"></i></button>
+                  <button class="btn btn-sm btn-danger borra-factura" data-id="{{ $f->id }}"><i class="fa fa-fw fa-times"></i></button>
+                </td>
               </tr>
             @endforeach
 
@@ -165,8 +178,8 @@
             <div class="card-body">
               <h5 class="card-title">Resumen IVA</h5>
               <h6 class="card-subtitle mb-2 text-muted">{{ $trimestre }}º trimestre</h6>
-              <p class="card-text">Has recibido <b class="text-primary">{{ $iva_total }}€</b> en IVA este trimestre, puedes desgravarte <b class="text-success">{{ $iva_total_gastos }}€</b> gracias a los gastos, debes ingresar un total de:</p>
-              <h4 class="card-text"><b class="text-warning">{{ $iva_total - $iva_total_gastos }}€</b></h4>
+              <p class="card-text">Has recibido <b class="text-warning">{{ $iva_total }}€</b> en IVA este trimestre, puedes desgravarte <b class="text-success">{{ $iva_total_gastos }}€</b> gracias a los gastos, debes ingresar un total de:</p>
+              <h4 class="card-text"><b class="text-primary">{{ $iva_total - $iva_total_gastos }}€</b></h4>
             </div>
           </div>
         @endif
@@ -224,6 +237,32 @@
             }
           }
         });
+      }
+
+    });
+
+    $(".aprueba-factura").click(function() {
+
+      if (confirm("¿Has recibido el pago?")) {
+
+        $(this).html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+        var id = $(this).data('id');
+
+        // $.post('{{ url('factura/aprobar') }}',
+        // {
+        //   _token: "{{ csrf_token() }}",
+        //   id: id
+        // },
+        // function(data, status){
+        //
+        //   if (status == "success") {
+        //
+        //     if (data.status == '200') {
+        //       $('#factura'+id).hide();
+        //       location.reload();
+        //     }
+        //   }
+        // });
       }
 
     });
