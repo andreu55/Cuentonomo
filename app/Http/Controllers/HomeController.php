@@ -85,11 +85,11 @@ class HomeController extends Controller
         ['tipo' => 'text', 'campo_db' => 'dni', 'nombre' => 'NIF / DNI'],
         ['tipo' => 'text', 'campo_db' => 'phone', 'nombre' => 'Teléfono'],
         ['tipo' => 'text', 'campo_db' => 'address_uno', 'nombre' => 'Dirección'],
-        ['tipo' => 'text', 'campo_db' => 'address_dos', 'nombre' => 'Dirección (2ª línea)'],
+        ['tipo' => 'text', 'campo_db' => 'address_dos', 'nombre' => 'Dirección (2ª L)'],
         ['tipo' => 'number', 'campo_db' => 'irpf', 'nombre' => 'IRPF'],
         ['tipo' => 'number', 'campo_db' => 'iva', 'nombre' => 'IVA'],
-        ['tipo' => 'text', 'campo_db' => 'banco_name', 'nombre' => 'Nombre del banco'],
         ['tipo' => 'text', 'campo_db' => 'banco_cuenta', 'nombre' => 'Nº de cuenta'],
+        ['tipo' => 'text', 'campo_db' => 'banco_name', 'nombre' => 'Banco'],
       ];
 
       $data['user'] = $user;

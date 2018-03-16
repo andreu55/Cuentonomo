@@ -1,19 +1,12 @@
 @extends('layouts.app')
 
+@section('title', 'Perfil')
+
 @section('content')
 
   <div class="container">
     <div class="row">
       <div class="col-12">
-
-        <div class="row">
-          <div class="col-2">
-            <h4 class="text-right">Tus datos</h4>
-          </div>
-          <div class="col-10">
-            <div id="load_text" class="pull-right"><i class="fa fa-fw fa-cog fa-spin text-warning" style="display:none"></i></div>
-          </div>
-        </div>
 
         @foreach ($campos as $campo)
 
@@ -49,7 +42,9 @@
             <ul class="list-group">
               @foreach ($clients as $client)
                 <li class="list-group-item" data-client="{{ $client->id }}">
-                  <a href="#" class="color-primary" data-toggle="modal" data-target="#editaCliente"><i class="fa fa-fw fa-pencil"></i></a>
+                  <a href="#" class="color-primary" data-toggle="modal" data-target="#editaCliente">
+                    <i class="far fa-edit fa-fw"></i>
+                  </a>
                   &nbsp;
                   {{ $client->name }}
                   <em class="pull-right">{{ $client->address }}</em>
@@ -135,7 +130,7 @@
 
       clearTimeout(typingTimer);
 
-      $('#load_text').hide();
+      $('#load_text').slideUp(); // .hide()
 
       var campo = $(this).attr('name');
       var valor = $(this).val();
@@ -148,7 +143,7 @@
     //user is "finished typing," do something
     function doneTyping(campo, valor) {
 
-      $('#load_text').show();
+      $('#load_text').show(); // .slideDown()
       $('#load_text').html('<em class="text-muted">Guardando</em> <i class="fa fa-fw fa-cog fa-spin text-warning"></i>');
 
       $.post("{{ url('user/editar') }}",

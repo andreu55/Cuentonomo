@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Jornadas')
+
 @section('css')
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/timepicker@1.11.12/jquery.timepicker.min.css">
   <style media="screen">
@@ -85,10 +87,10 @@
 
         <div class="row text-center mb-5">
           <div class="col">
-            <button class="guardaHora omg_button btn-block" data-entrada="1" type="button"><i class="fa fa-fw fa-sign-in"></i> Entrada</button>
+            <button class="guardaHora omg_button btn-block" data-entrada="1" type="button"><i class="fas fa-sign-in-alt fa-fw"></i> Entrada</button>
           </div>
           <div class="col">
-            <button class="guardaHora omg_button btn-block" data-entrada="0" type="button">Salida <i class="fa fa-fw fa-sign-out"></i></button>
+            <button class="guardaHora omg_button btn-block" data-entrada="0" type="button">Salida <i class="fas fa-sign-out-alt fa-fw"></i></button>
           </div>
         </div>
 
@@ -97,15 +99,15 @@
       <div class="col-lg-4">
 
         @if ($ult_jornadas)
-          <h3>
-            Últimas jornadas
-            <em class="pull-right" title="{{ $horas_dia }} horas al día">
+          <h5>
+            Últimas
+            <em class="float-right" title="{{ $horas_dia }} horas al día">
               <small class="{{ $balance['horas'] >= 0 ? 'text-success' : 'text-danger' }}">
                 <b>
                   {{ $balance['horas'] >= 0 ? '+' : '' }}{{ $balance['horas'] }}{{ $balance['minutos'] ? ':'.$balance['minutos'] : '' }}</b> horas
               </small>
             </em>
-          </h3>
+          </h5>
           <ul class="list-group">
             @foreach ($ult_jornadas as $jornada)
               @php
@@ -131,10 +133,10 @@
                 a <b class="text-primary">{{ $jornada->salida ? $salida->format('H:i') : '??' }}</b>
                 @if ($jornada->notas)
                   <small style="vertical-align:text-top">
-                    <i class="fa fa-fw fa-question-circle-o" data-toggle="tooltip" data-placement="top" title="{{ $jornada->notas }}"></i>
+                    <i class="far fa-question-circle fa-fw" data-toggle="tooltip" data-placement="top" title="{{ $jornada->notas }}"></i>
                   </small>
                 @endif
-                <em class="pull-right">
+                <em class="float-right">
                   <small class="text-muted">
                     {{ date('d l', strtotime($jornada->fecha)) }}
                   </small>

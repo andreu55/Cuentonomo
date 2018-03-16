@@ -1,14 +1,6 @@
 @extends('layouts.app')
 
-@section('css')
-
-  <style>
-    .tr-tabla, .tr-tabla>td, .tr-tabla>th {
-      transition: all 1.5s ease;
-    }
-  </style>
-
-@endsection
+@section('title', 'Home')
 
 @section('content')
   <div class="container">
@@ -26,7 +18,7 @@
           <span class="d-none d-sm-inline">
             Facturas
           </span>
-          <em class="pull-right">
+          <em class="float-right">
             <a href="{{ url('home/'.$ant_trim.'/'.$ant_year) }}" class="btn my-2 my-sm-0">
               <i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
             </a>
@@ -100,9 +92,9 @@
                 <td>{{ number_format($iva, 2) }}</td>
                 <td>{{  $irpf  }}</td>
                 <td>{{  $total  }}</td>
-                <td class="pull-right">
-                  <button class="btn btn-sm btn-success pagada-factura mr-1" data-id="{{ $f->id }}"><i class="fa fa-fw fa-<?= $f->pagada ? "undo" : "check" ?>"></i></button>
-                  <button class="btn btn-sm btn-danger borra-factura" data-id="{{ $f->id }}"><i class="fa fa-fw fa-trash-o"></i></button>
+                <td class="float-right">
+                  <button class="btn btn-sm btn-success pagada-factura mr-1" data-id="{{ $f->id }}"><i class="fas fa-<?= $f->pagada ? "undo" : "check" ?> fa-fw"></i></button>
+                  <button class="btn btn-sm btn-danger borra-factura" data-id="{{ $f->id }}"><i class="far fa-trash-alt fa-fw"></i></button>
                 </td>
               </tr>
             @endforeach
@@ -153,7 +145,7 @@
               <h4 class="card-title">
                 <?=$g->concepto?>
                 <em class="text-muted lafecha fw-200">{{ $g->created_at->format('d/m/Y') }}</em>
-                <button class="btn btn-sm btn-danger pull-right borra-gasto" data-id="<?=$g->id?>"><i class="fa fa-fw fa-times"></i></button>
+                <button class="btn btn-sm btn-danger float-right borra-gasto" data-id="<?=$g->id?>"><i class="fa fa-fw fa-times"></i></button>
               </h4>
               <p class="card-text">
                 <b><?=number_format($g->cantidad, 2)?>€</b> =

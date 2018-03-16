@@ -1,5 +1,7 @@
 @extends('layouts.app')
 
+@section('title', 'Añadir Nuevo')
+
 @section('content')
 
 <div id="block_final" style="display:none">
@@ -55,7 +57,7 @@
             <div class="input-group">
               <input type="number" class="form-control" id="cantidad" step='0.01' value="2" required>
               <div class="input-group-append">
-                <span class="input-group-text"><b>€</b></span>
+                <span class="input-group-text"><i class="fas fa-euro-sign fa-fw"></i></span>
               </div>
             </div>
           </div>
@@ -80,7 +82,9 @@
             <label for="concepto">Concepto</label>
             <input type="text" class="form-control" id="concepto" value="Cafetería" onclick="select()" required>
           </div>
-          <button id="guarda-gasto" class="btn btn-epic btn-block mb-3 mt-4">Guardar</button>
+          <button id="guarda-gasto" class="btn btn-epic btn-block mb-3 mt-4">
+            <i class="far fa-save fw-fw"></i> Guardar
+          </button>
 
           <div id="alert_block">
 
@@ -102,7 +106,7 @@
                   <div class="col-sm-10">
                     <div class="input-group">
                       <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-fw fa-info" aria-hidden="true"></i></span>
+                        <span class="input-group-text"><i class="fas fa-info fa-fw"></i></span>
                       </div>
                       <input class="form-control" type="text" value="1" name="id">
                     </div>
@@ -116,7 +120,7 @@
                   <div class="col-sm-10">
                     <div class="input-group">
                       <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-fw fa-clock-o" aria-hidden="true"></i></span>
+                        <span class="input-group-text"><i class="fas fa-hourglass-half fa-fw"></i></span>
                       </div>
                       <input class="form-control" type="number" step="0.01" value="100" name="horas">
                     </div>
@@ -129,7 +133,7 @@
                   <div class="col-sm-10">
                     <div class="input-group">
                       <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-fw fa-usd" aria-hidden="true"></i></span>
+                        <span class="input-group-text"><i class="fas fa-euro-sign fa-fw"></i></span>
                       </div>
                     <input class="form-control" type="number" step="0.01" value="15" name="precio">
                     </div>
@@ -142,7 +146,7 @@
                   <div class="col-sm-10">
                     <div class="input-group">
                       <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-fw fa-calendar-o" aria-hidden="true"></i></span>
+                        <span class="input-group-text"><i class="far fa-calendar-alt fa-fw"></i></span>
                       </div>
                     <input class="form-control" type="date" value="<?=date('Y-m-d')?>" name="fecha">
                     </div>
@@ -155,7 +159,7 @@
                   <div class="col-sm-10">
                     <div class="input-group">
                       <div class="input-group-prepend">
-                        <span class="input-group-text"><i class="fa fa-fw fa-quote-right" aria-hidden="true"></i></span>
+                        <span class="input-group-text"><i class="fas fa-quote-right fa-fw"></i></span>
                       </div>
                     <input class="form-control" type="text" value="Desarrollo aplicaciones y mantenimiento web" name="concepto">
                     </div>
@@ -185,9 +189,13 @@
                   </div>
                 @endforeach --}}
 
-                <button type="submit" class="btn btn-sm mt-3 btn-block btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Nueva ventana">Ver Factura <i class="fa fa-fw fa-external-link" aria-hidden="true"></i></button>
+                <button type="submit" class="btn btn-sm mt-3 btn-block btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Nueva ventana">
+                  Ver Factura <i class="fas fa-external-link-alt fa-fw"></i>
+                </button>
 
-                <button id="guarda-factura" class="btn btn-epic btn-block mb-3 mt-2">Guardar ingreso</button>
+                <button id="guarda-factura" class="btn btn-epic btn-block mb-3 mt-2">
+                  <i class="far fa-save fw-fw"></i> Guardar
+                </button>
               </div>
             </div>
           </form>
