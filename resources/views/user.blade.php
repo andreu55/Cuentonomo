@@ -6,7 +6,14 @@
     <div class="row">
       <div class="col-12">
 
-        <h4>Tus datos <div id="load_text" class="pull-right"><i class="fa fa-fw fa-cog fa-spin text-warning" style="display:none"></i></div></h4>
+        <div class="row">
+          <div class="col-2">
+            <h4 class="text-right">Tus datos</h4>
+          </div>
+          <div class="col-10">
+            <div id="load_text" class="pull-right"><i class="fa fa-fw fa-cog fa-spin text-warning" style="display:none"></i></div>
+          </div>
+        </div>
 
         @foreach ($campos as $campo)
 
@@ -142,7 +149,7 @@
     function doneTyping(campo, valor) {
 
       $('#load_text').show();
-      $('#load_text').html('<i class="fa fa-fw fa-cog fa-spin text-warning"></i>');
+      $('#load_text').html('<em class="text-muted">Guardando</em> <i class="fa fa-fw fa-cog fa-spin text-warning"></i>');
 
       $.post("{{ url('user/editar') }}",
       {
@@ -152,9 +159,9 @@
       },
       function(data, status) {
         if(status == 'success')
-          $('#load_text').html('<i class="fa fa-check text-success"></i> <small class="text-muted"><em>Todo Guardado</em></small>');
+          $('#load_text').html('<em class="text-muted">Guardado</em> <i class="fa fa-fw fa-check text-success"></i>');
         else
-          $('#load_text').html('<i class="fa fa-times text-danger"></i>');
+          $('#load_text').html('<i class="fa fa-fw fa-times text-danger"></i>');
       });
     }
 
