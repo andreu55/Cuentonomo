@@ -160,8 +160,11 @@
           @foreach ($gastos as $key => $g)
 
             @php
+              // Sacamos la base sabiendo el iva y el total
+              $base = round(($g->cantidad / (1 + $g->tipo_gasto->iva)), 2);
+
               $cantidad_total += $g->cantidad;
-              $base_total_gastos += round(($g->cantidad / (1 + $g->tipo_gasto->iva)), 2); // Sacamos la base sabiendo el iva y el total
+              $base_total_gastos += $base;
               $iva_total_gastos += round(($base * $g->tipo_gasto->iva), 2); // Con esa base, sacamos el iva del gasto
             @endphp
 
