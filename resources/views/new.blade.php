@@ -4,30 +4,26 @@
 
 @section('content')
 
-<div id="block_final" style="display:none">
-  <div class="jumbotron jumbotron-fluid">
-    <div class="container">
-      <div class="col">
-        <h1 class="display-3">Todo guardado!</h1>
-        <p class="lead">Enhorabuena! molas mogollón y aqui un Lorem ipsum dolor sit amet, a deserunt mollit anim id est laborum para rellenar</p>
-        <hr class="my-4">
-        <p>
-          <p>¿Quieres introducir otro pago?</p>
-          <button class="btn btn-primary btn-lg btn-block" id="refresh" role="button">
-            <i class="fa fa-fw fa-plus" aria-hidden="true"></i>
-            Oh yeah!
-          </button>
-        </p>
-        <p>
-          <p>Ir a todos los pagos</p>
-          <a href="{{ url('home') }}" class="btn btn-warning btn-lg btn-block">
-            <i class="fa fa-fw fa-list" aria-hidden="true"></i>
-            Gestionar
-          </a>
-        </p>
-      </div>
+<div id="block_final" class="container" style="display:none">
+
+    <div class="col">
+      <h1 class="display-3">Todo guardado!</h1>
+      <p class="lead">Enhorabuena! molas mogollón y aqui un Lorem ipsum que no se va a leer nadie est laborum para rellenar</p>
+      <hr class="my-4">
+      <p>
+        <button class="btn btn-primary btn-lg btn-block" id="refresh" role="button">
+          <i class="fas fa-plus fa-fw" aria-hidden="true"></i>
+          ¿Otro pago?
+        </button>
+      </p>
+      <p>
+        <a href="{{ url('home') }}" class="btn btn-warning btn-lg btn-block">
+          <i class="fas fa-list fa-fw" aria-hidden="true"></i>
+          Gestionar todos
+        </a>
+      </p>
     </div>
-  </div>
+
 </div>
 <div id="block_inicial" class="container">
   <div class="row">
@@ -168,10 +164,9 @@
               </div>
               <div class="col-12 col-sm-3">
                 <h5 for="select-cliente">
-                  <i class="fa fa-fw fa-user" aria-hidden="true"></i>
                   Cliente
-                  <span class="pull-right">
-                    <a href="#" class="btn btn-sm btn-outline-warning" title="Nuevo cliente" data-toggle="modal" data-target="#nuevoCliente"><i class="fa fa-plus"></i></a>
+                  <span class="float-right mr-2">
+                    <i class="fas fa-user-plus text-primary" data-toggle="modal" data-target="#nuevoCliente" style="cursor:pointer"></i>
                   </span>
                 </h5>
 

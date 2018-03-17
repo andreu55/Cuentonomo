@@ -35,7 +35,7 @@
             <h4 for="select-cliente">
               Clientes
             </h4>
-            <a href="#" class="btn btn-outline-warning" title="Nuevo cliente" data-toggle="modal" data-target="#nuevoCliente"><i class="fa fa-plus"></i></a>
+            <a href="#" class="btn btn-outline-warning" title="Nuevo cliente" data-toggle="modal" data-target="#nuevoCliente"><i class="fas fa-plus"></i></a>
           </div>
 
           <div class="col-sm-10">

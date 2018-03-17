@@ -2,6 +2,15 @@
 
 @section('title', 'Home')
 
+@section('css')
+  <style media="screen">
+    .my-left, .my-right { transition: all 0.5s ease }
+    /* .my-left { padding-right: 15px } */
+    /* .my-left:hover { padding-right: 20px } */
+    .my-right:hover { padding-left: 15px }
+  </style>
+@endsection
+
 @section('content')
   <div class="container">
 
@@ -19,12 +28,12 @@
             Facturas
           </span>
           <em class="float-right">
-            <a href="{{ url('home/'.$ant_trim.'/'.$ant_year) }}" class="btn my-2 my-sm-0">
-              <i class="fa fa-2x fa-angle-double-left" aria-hidden="true"></i>
+            <a href="{{ url('home/'.$ant_trim.'/'.$ant_year) }}" class="btn my-left">
+              <i class="fas fa-angle-double-left fa-fw fa-2x" aria-hidden="true"></i>
             </a>
             {{ $trimestre }}º Trimestre {{ $year }}
-            <a href="{{ url('home/'.$sig_trim.'/'.$sig_year) }}" class="btn my-2 my-sm-0">
-              <i class="fa fa-2x fa-angle-double-right" aria-hidden="true"></i>
+            <a href="{{ url('home/'.$sig_trim.'/'.$sig_year) }}" class="btn my-right">
+              <i class="fas fa-angle-double-right fa-fw fa-2x" aria-hidden="true"></i>
             </a>
           </em>
         </h2>

@@ -4,69 +4,6 @@
 
 @section('css')
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/timepicker@1.11.12/jquery.timepicker.min.css">
-  <style media="screen">
-    @import url(https://fonts.googleapis.com/css?family=BenchNine:700);
-    .omg_button {
-      background-color: #1ABC9C;
-      border: none;
-      color: #ffffff;
-      cursor: pointer;
-      display: inline-block;
-      font-family: 'BenchNine', Arial, sans-serif;
-      font-size: 1em;
-      font-size: 22px;
-      line-height: 1em;
-      margin-top: 25px;
-      outline: none;
-      padding: 14px 40px 12px;
-      position: relative;
-      text-transform: uppercase;
-      font-weight: 700;
-    }
-
-    .omg_button:before,
-    .omg_button:after {
-      border-color: transparent;
-      -webkit-transition: all 0.25s;
-      transition: all 0.25s;
-      border-style: solid;
-      border-width: 0;
-      content: "";
-      height: 24px;
-      position: absolute;
-      width: 24px;
-    }
-
-    .omg_button:before {
-      border-color: #16A085;
-      border-left-width: 2px;
-      border-top-width: 2px;
-      left: -5px;
-      top: -5px;
-    }
-
-    .omg_button:after {
-      border-bottom-width: 2px;
-      border-color: #16A085;
-      border-right-width: 2px;
-      bottom: -5px;
-      right: -5px;
-    }
-
-    .omg_button:hover,
-    .omg_button.hover {
-      background-color: #16A085;
-    }
-
-    .omg_button:hover:before,
-    .omg_button.hover:before,
-    .omg_button:hover:after,
-    .omg_button.hover:after {
-      height: 100%;
-      width: 100%;
-    }
-
-  </style>
 @endsection
 
 @section('content')
@@ -74,37 +11,29 @@
     <div class="row">
 
       <div class="col-lg-8 col-md-offset-2">
-        <h2>Horas trabajadas</h2>
-
+        <h3><i class="fas fa-plus fa-sm fa-fw"></i> Nueva</h3>
         <div class="row mb-2">
-          <div class="col-8">
+          <div class="col">
             <input id="laHora" type="text" class="time ui-timepicker-input form-control" autocomplete="off">
           </div>
-          <div class="col-4">
+          <div class="col">
             <input type="date" class="form-control" id="fecha" value="<?= date('Y-m-d') ?>" required>
           </div>
         </div>
 
-        <div class="row text-center mb-5">
-          <div class="col">
-            <button class="guardaHora omg_button btn-block" data-entrada="1" type="button"><i class="fas fa-sign-in-alt fa-fw"></i> Entrada</button>
-          </div>
-          <div class="col">
-            <button class="guardaHora omg_button btn-block" data-entrada="0" type="button">Salida <i class="fas fa-sign-out-alt fa-fw"></i></button>
-          </div>
+        <div class="text-center mt-4 mb-5">
+          <button class="guardaHora btn btn-lg btn-primary btn-block" data-entrada="1" type="button"><i class="fas fa-sign-in-alt fa-fw"></i> Entrada</button>
+          <button class="guardaHora btn btn-lg btn-success btn-block mt-3" data-entrada="0" type="button">Salida <i class="fas fa-sign-out-alt fa-fw"></i></button>
         </div>
-
       </div>
 
       <div class="col-lg-4">
-
         @if ($ult_jornadas)
           <h5>
             Últimas
             <em class="float-right" title="{{ $horas_dia }} horas al día">
               <small class="{{ $balance['horas'] >= 0 ? 'text-success' : 'text-danger' }}">
-                <b>
-                  {{ $balance['horas'] >= 0 ? '+' : '' }}{{ $balance['horas'] }}{{ $balance['minutos'] ? ':'.$balance['minutos'] : '' }}</b> horas
+                <b>{{ $balance['horas'] >= 0 ? '+' : '' }}{{ $balance['horas'] }}{{ $balance['minutos'] ? ':'.$balance['minutos'] : '' }}</b> horas
               </small>
             </em>
           </h5>

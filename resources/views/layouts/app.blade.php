@@ -33,40 +33,6 @@
     <!-- Custom styles for this template -->
     <link href="{{ asset('public/css/style.css') }}" rel="stylesheet">
 
-		<style media="screen">
-		.card-block {
-			flex: 1 1 auto;
-			padding: 1.25rem;
-		}
-		.username > h4 {
-			margin-bottom:1px;
-			max-width: 190px;
-    	overflow: hidden;
-		}
-		.btn-epic {
-			padding: .75rem 2.5rem;
-			color: #fff;
-			text-shadow: 1px 1px 2px #333;
-			/*border-color: ;*/
-			border: 2px solid #fff;
-			background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
-			transition: all 2.5s;
-		}
-		.btn-epic:hover {
-			text-shadow: 1px 1px 3px #999;
-			/*border-color: #000;*/
-			border: 2px solid #333;
-			cursor: pointer;
-			/*background:linear-gradient(60deg, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82, #f79533);*/
-			transition: all 0.5s;
-		}
-		.lafecha { font-size: 13px; }
-		.fw-200 { font-weight: 200; }
-		.tr-tabla, .tr-tabla>td, .tr-tabla>th {
-      transition: all 1.5s ease;
-    }
-		</style>
-
 		@yield('css')
 
 </head>
@@ -74,13 +40,13 @@
 	<div class="container-fluid" id="wrapper">
 		<div class="row">
 			<nav class="sidebar col-xs-12 col-sm-4 col-lg-3 col-xl-2 bg-faded sidebar-style-1">
-				<h1 class="site-title"><a href="index.html"><i class="far fa-moon fa-lg" style="margin-right:3px"></i>uentónomo</a></h1>
+				<h1 class="site-title"><a href="{{ url('home') }}"><i class="far fa-moon fa-lg" style="margin-right:3px"></i>uentónomo</a></h1>
 
 				<a href="#menu-toggle" class="btn btn-default" id="menu-toggle"><em class="fa fa-bars"></em></a>
 
 				@php
 					$paginas = [
-						['url' => 'home', 'icon' => 'fas fa-chart-pie', 'nombre' => 'Home'],
+						// ['url' => 'home', 'icon' => 'fas fa-chart-pie', 'nombre' => 'Home'],
 						['url' => 'new', 'icon' => 'fas fa-plus', 'nombre' => 'Nuevo'],
 						['url' => 'user', 'icon' => 'fas fa-user', 'nombre' => 'Perfil'],
 						['url' => 'horas', 'icon' => 'far fa-clock', 'nombre' => 'Horas'],
@@ -88,7 +54,6 @@
 				@endphp
 
 				<ul class="nav nav-pills flex-column sidebar-nav">
-
 					@foreach ($paginas as $p)
 						<li class="nav-item"><a class="nav-link {{ Request::is($p['url']) ? 'active' : '' }}" href="{{ url($p['url']) }}">
 							<i class="{{ $p['icon'] }} fa-fw"></i>&nbsp; {{ $p['nombre'] }} {!! Request::is($p['url']) ? '<span class="sr-only">(current)</span>' : '' !!}</a>
@@ -110,15 +75,17 @@
 					</div>
 
 					@guest
-						<div class="username mt-1">
-							<h4><a href="{{ route('login') }}">Login</a></h4>
-							<h6 class="text-muted"><a href="{{ route('register') }}">Register</a></h6>
+						<div class="col-md-6 col-lg-5">
+							<div class="username mt-1 float-right">
+								<h4 class="mb-2"><a href="{{ route('login') }}">Login</a></h4>
+								<h6 class="text-muted"><a href="{{ route('register') }}">Register</a></h6>
+							</div>
 						</div>
 					@else
 
 					<div class="dropdown user-dropdown col-md-6 col-lg-5 text-center text-md-right">
 						<a class="btn btn-stripped dropdown-toggle" href="#" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-							<img src="{{ asset('public/images/profile-pic.jpg') }}" alt="profile photo" class="circle float-left profile-photo" width="50" height="auto">
+							<img src="https://www.gravatar.com/avatar/{{ md5(strtolower(trim(Auth::user()->email))) }}?d=mm&s=50&r=x" alt="profile photo" class="circle float-left profile-photo" width="50" height="auto">
 							<div class="username mt-1">
 								<h4>{{ Auth::user()->name }}</h4>
 								<h6 class="text-muted">Super Admin</h6>
