@@ -5,25 +5,23 @@
 @section('content')
 
 <div id="block_final" class="container" style="display:none">
-
-    <div class="col">
-      <h1 class="display-3">Todo guardado!</h1>
-      <p class="lead">Enhorabuena! molas mogollón y aqui un Lorem ipsum que no se va a leer nadie est laborum para rellenar</p>
-      <hr class="my-4">
-      <p>
-        <button class="btn btn-primary btn-lg btn-block" id="refresh" role="button">
-          <i class="fas fa-plus fa-fw" aria-hidden="true"></i>
-          ¿Otro pago?
-        </button>
-      </p>
-      <p>
-        <a href="{{ url('home') }}" class="btn btn-warning btn-lg btn-block">
-          <i class="fas fa-list fa-fw" aria-hidden="true"></i>
-          Gestionar todos
-        </a>
-      </p>
-    </div>
-
+  <div class="col">
+    <h1 class="display-3">Todo guardado!</h1>
+    <p class="lead">Enhorabuena! molas mogollón y aqui un Lorem ipsum que no se va a leer nadie est laborum para rellenar</p>
+    <hr class="my-4">
+    <p>
+      <button class="btn btn-primary btn-lg btn-block" id="refresh" role="button">
+        <i class="fas fa-plus fa-fw" aria-hidden="true"></i>
+        ¿Otro pago?
+      </button>
+    </p>
+    <p>
+      <a href="{{ url('home') }}" class="btn btn-warning btn-lg btn-block">
+        <i class="fas fa-list fa-fw" aria-hidden="true"></i>
+        Gestionar todos
+      </a>
+    </p>
+  </div>
 </div>
 <div id="block_inicial" class="container">
   <div class="row">
@@ -166,7 +164,7 @@
                 <h5 for="select-cliente">
                   Cliente
                   <span class="float-right mr-2">
-                    <i class="fas fa-user-plus text-primary" data-toggle="modal" data-target="#nuevoCliente" style="cursor:pointer"></i>
+                    <i class="fas fa-user-plus text-primary pointer" data-toggle="modal" data-target="#nuevoCliente"></i>
                   </span>
                 </h5>
 
@@ -267,7 +265,7 @@
 
   $("#guarda-gasto").click(function() {
 
-    $(this).html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+    $(this).html('<i class="fas fa-sync-alt fa-spin fa-fw"></i>');
 
     $.post("{{ url('gasto/nuevo') }}",
     {
@@ -295,7 +293,7 @@
 
   $("#guarda-factura").click(function() {
 
-    $(this).html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+    $(this).html('<i class="fas fa-sync-alt fa-spin fa-fw"></i>');
 
     $.post("{{ url('factura/nuevo') }}",
     {

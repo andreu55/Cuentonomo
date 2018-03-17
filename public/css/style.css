@@ -512,17 +512,30 @@ p {
   background-color: #30a5ff !important; }
 
 .article {
-  padding: 1rem 0;
+  padding: 1rem 1rem 1rem 0;
   border-bottom: 1px solid #dfdfdf;
   margin-bottom: 1rem; }
 
 .article:first-child {
-  padding: 0 0 10px 0; }
+  padding: 0 1rem 1rem 0; }
 
 .article:last-child {
-  padding: 0 0 10px 0;
+  padding: 1rem 1rem 10px 0;
   border: none;
   margin-bottom: 0; }
+
+/* .article {
+  padding: 0.8rem 1rem 0.8rem 0;
+  border-bottom: 1px solid #dfdfdf;
+  margin-bottom: 0.9rem; }
+
+.article:first-child {
+  padding: 0 1rem 0.8rem 0; }
+
+.article:last-child {
+  padding: 0 1rem 1rem 0;
+  border: none;
+  margin-bottom: 0; } */
 
 .article h4 a {
   margin-bottom: 10px; }
@@ -609,3 +622,7 @@ input[type=checkbox]:checked + label {
   }
   li.nav-item > .nav-link { transition: all 0.3s ease }
   li.nav-item > .nav-link:hover { padding-left: 1.5rem }
+
+  .pointer {
+    cursor: pointer;
+  }

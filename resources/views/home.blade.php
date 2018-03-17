@@ -8,6 +8,7 @@
     /* .my-left { padding-right: 15px } */
     /* .my-left:hover { padding-right: 20px } */
     .my-right:hover { padding-left: 15px }
+    .table td, .table th { border-top:0 }
   </style>
 @endsection
 
@@ -20,9 +21,8 @@
       </div>
     @endif
 
-    <div class="row">
+    <div class="row d-none d-sm-block">
       <div class="col-md-12 col-md-offset-2">
-
         <h2>
           <span class="d-none d-sm-inline">
             Facturas
@@ -37,7 +37,6 @@
             </a>
           </em>
         </h2>
-
       </div>
     </div>
 
@@ -126,46 +125,72 @@
       </div>
     </div>
 
+
     <div class="row">
 
       <div class="col-md-8 col-md-offset-2">
-        <h2>Gastos</h2>
 
-        @php
-          $cantidad_total = $base_total_gastos = $iva_total_gastos = 0;
-        @endphp
+    <div class="card mb-4">
+      <div class="card-block">
+        <h3 class="card-title">Gastos</h3>
 
-        @foreach ($gastos as $key => $g)
+        <div class="dropdown card-title-btn-container">
+          {{-- <button class="btn btn-sm btn-subtle" type="button"><em class="fa fa-list-ul"></em> View All</button> --}}
+
+          <button class="btn btn-sm btn-subtle dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <em class="fas fa-cog"></em>
+          </button>
+          <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+            <a class="dropdown-item" href="#"><i class="fas fa-exclamation-circle fa-fw"></i> Esto no hase na</a>
+            <a class="dropdown-item" href="#"><i class="fas fa-star fa-fw"></i> pero oye,</a>
+            <a class="dropdown-item" href="#"><i class="far fa-thumbs-up fa-fw"></i> queda de categoría</a>
+          </div>
+        </div>
+
+        <h6 class="card-subtitle mb-2 text-muted">Más recientes primero</h6>
+
+        <div class="divider" style="margin-top: 1rem;"></div>
+
+        <div class="articles-container">
 
           @php
-          // Sacamos la base sabiendo el iva y el total
-          $base = round(($g->cantidad / (1 + $g->tipo_gasto->iva)), 2);
-          // Con esa base, sacamos el iva del gasto
-          $iva = round(($base * $g->tipo_gasto->iva), 2);
-
-          $cantidad_total += $g->cantidad;
-          $base_total_gastos += $base;
-          $iva_total_gastos += $iva;
-
+            $cantidad_total = $base_total_gastos = $iva_total_gastos = 0;
           @endphp
 
-          <div class="card mb-2" id="gasto<?=$g->id?>">
-            <div class="card-body">
-              <h4 class="card-title">
-                <?=$g->concepto?>
-                <em class="text-muted lafecha fw-200">{{ $g->created_at->format('d/m/Y') }}</em>
-                <button class="btn btn-sm btn-danger float-right borra-gasto" data-id="<?=$g->id?>"><i class="fa fa-fw fa-times"></i></button>
-              </h4>
-              <p class="card-text">
-                <b><?=number_format($g->cantidad, 2)?>€</b> =
-                <span class="text-danger"><?=number_format($base, 2)?></span>
-                <i class="fa fa-fw fa-arrow-right"></i>
-                <b class="text-success"><?=number_format($iva, 2)?></b>
-                <small>(<?=number_format($g->tipo_gasto->iva, 2)?>%)</small>
-              </p>
+          @foreach ($gastos as $key => $g)
+
+            @php
+              $cantidad_total += $g->cantidad;
+              $base_total_gastos += round(($g->cantidad / (1 + $g->tipo_gasto->iva)), 2); // Sacamos la base sabiendo el iva y el total
+              $iva_total_gastos += round(($base * $g->tipo_gasto->iva), 2); // Con esa base, sacamos el iva del gasto
+            @endphp
+
+            <div class="article" id="gasto<?=$g->id?>">
+              <div class="col-xs-12">
+                <div class="row">
+                  <div class="col-2 date">
+                    <div class="large">{{ $g->created_at->format('d') }}</div>
+                    <div class="text-muted">{{ $g->created_at->format('M') }}</div>
+                  </div>
+                  <div class="col-10">
+                    <h4>
+                      <?=$g->concepto?>
+                      <i class="far fa-trash-alt fa-fw text-danger float-right borra-gasto pointer" data-id="<?=$g->id?>"></i>
+                    </h4>
+                    <p>
+                      {!! formatGasto($g->cantidad, $g->tipo_gasto->iva) !!}
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <div class="clear"></div>
             </div>
-          </div>
-        @endforeach
+
+          @endforeach
+
+        </div>
+      </div>
+    </div>
       </div>
 
       <div class="col-md-4">
@@ -193,7 +218,7 @@
 
     $(".borra-gasto").click(function() {
 
-      $(this).html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+      $(this).html('<i class="fas fa-sync-alt fa-spin fa-fw"></i>');
       var id = $(this).data('id');
 
       $.post('{{ url('gasto/borrar') }}',
@@ -216,7 +241,7 @@
 
       if (confirm("¿Borrar seguro?")) {
 
-        $(this).html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+        $(this).html('<i class="fas fa-sync-alt fa-spin fa-fw"></i>');
         var id = $(this).data('id');
 
         $.post('{{ url('factura/borrar') }}',

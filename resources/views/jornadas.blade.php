@@ -67,7 +67,11 @@
                 @endif
                 <em class="float-right">
                   <small class="text-muted">
-                    {{ date('d l', strtotime($jornada->fecha)) }}
+                    @php
+                      $fecha_jornada = strtotime($jornada->fecha);
+                    @endphp
+                    {{ traduceDia(date('l', $fecha_jornada)) }}
+                    {{ date('d', $fecha_jornada) }}
                   </small>
                   &nbsp;
                   <small class="{{ $bal >= 0 ? 'text-success' : 'text-danger' }}">
@@ -99,7 +103,7 @@
 
     $(".guardaHora").click(function(){
 
-      $(this).html('<i class="fa fa-refresh fa-spin fa-fw"></i>');
+      $(this).html('<i class="fas fa-sync-alt fa-spin fa-fw"></i>');
       var entrada = $(this).data('entrada');
 
       $.post("{{ url('jornada/guardar') }}",
