@@ -5,7 +5,7 @@
 @section('content')
 
   <div class="container">
-    <div class="col-6 offset-md-3">
+    <div class="col-md-6 offset-md-3">
       <form class="form-horizontal" method="post" action="{{ route('login') }}">
         {{ csrf_field() }}
         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
