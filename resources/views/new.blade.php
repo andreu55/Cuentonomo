@@ -182,7 +182,8 @@
                   </div>
                 @endforeach --}}
 
-                <button type="submit" class="btn btn-sm mt-3 btn-block btn-secondary" data-toggle="tooltip" data-placement="bottom" title="Nueva ventana">
+                 {{-- data-toggle="tooltip" data-placement="left" title="Nueva ventana" --}}
+                <button type="submit" class="btn btn-sm mt-3 btn-block btn-secondary">
                   Ver Factura <i class="fas fa-external-link-alt fa-fw"></i>
                 </button>
 
@@ -193,63 +194,8 @@
             </div>
           </form>
 
-
-
           <!-- Modal -->
-          <div class="modal fade" id="nuevoCliente" tabindex="-1" role="dialog" aria-labelledby="nuevoClienteLabel" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-              <div class="modal-content">
-
-              <form action="{{ url('cliente/nuevo') }}" method="post">
-                {{ csrf_field() }}
-
-                <div class="modal-header">
-                  <h5 class="modal-title" id="nuevoClienteLabel">
-                    <i class="fa fa-fw fa-plus" aria-hidden="true"></i>
-                    Añadir nuevo cliente
-                  </h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <div class="col-12">
-
-                    <label class="col-form-label">
-                      <i class="fa fa-fw fa-user" aria-hidden="true"></i>
-                      Nombre
-                    </label>
-                    <input class="form-control" type="text" placeholder="Andreu García Martínez" name="name">
-
-                    <label class="col-form-label">
-                      <i class="fa fa-fw fa-info" aria-hidden="true"></i>
-                      NIF
-                    </label>
-                    <input class="form-control" type="text" placeholder="12345678Z" name="nif">
-
-                    <label class="col-form-label">
-                      <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i>
-                      Dirección fiscal
-                    </label>
-                    <input class="form-control" type="text" placeholder="C/ Falsa 123" name="address">
-
-                    <div class="custom-control custom-checkbox mt-3">
-                      <input type="checkbox" class="custom-control-input" id="persona_fisica_check" name="persona_fisica">
-                      <label class="custom-control-label" for="persona_fisica_check">Es un particular?</label>
-                    </div>
-
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-fw fa-plus" aria-hidden="true"></i>
-                    Crear
-                  </button>
-                </div>
-              </form>
-              </div>
-            </div>
-          </div>
+          @include('layouts.clienteModal')
 
         </div>
       </div>

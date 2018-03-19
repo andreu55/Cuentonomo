@@ -187,6 +187,26 @@ class HomeController extends Controller
       return response()->json($res, $res['status']);
     }
 
+    public function borraCliente(Request $request) {
+
+      $id = $request->id ?? 0;
+      $user = Auth::user();
+
+      if ($id) {
+        if ($user->clients->contains($id)) {
+          if ($client = Client::find($id)) {
+
+            $client->delete();
+            $res['status'] = 200;
+            $res['msj'] = 'Borrado con éxito!';
+
+          } else { $res['status'] = 400; $res['msj'] = 'Cliente no encontrado'; }
+        } else { $res['status'] = 400; $res['msj'] = 'No tienes permisos'; }
+      } else { $res['status'] = 406; $res['msj'] = 'Faltan datos!'; }
+
+      return response()->json($res, $res['status']);
+    }
+
     public function factura_nuevo(Request $request) {
 
       $id = isset($request->id) ? $request->id : 0;

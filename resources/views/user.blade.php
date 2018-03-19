@@ -34,17 +34,22 @@
           <div class="col-sm-2 text-right">
             <h4 for="select-cliente">
               Clientes
+              <i class="fas fa-user-plus fa-xs fa-fw ml-1 text-primary pointer" data-toggle="modal" data-target="#nuevoCliente"></i>
             </h4>
-            <a href="#" class="btn btn-outline-warning" title="Nuevo cliente" data-toggle="modal" data-target="#nuevoCliente"><i class="fas fa-plus"></i></a>
+            {{-- <button class="btn btn-outline-warning" title="Nuevo cliente" data-toggle="modal" data-target="#nuevoCliente"><i class="fas fa-plus fa-fw"></i></button> --}}
           </div>
 
           <div class="col-sm-10">
             <ul class="list-group">
               @foreach ($clients as $client)
-                <li class="list-group-item" data-client="{{ $client->id }}">
-                  <a href="#" class="color-primary" data-toggle="modal" data-target="#editaCliente">
+                <li class="list-group-item" data-client="{{ $client->id }}" id="client{{ $client->id }}">
+                  {{-- <a href="#" class="color-primary" data-toggle="modal" data-target="#editaCliente">
                     <i class="far fa-edit fa-fw"></i>
                   </a>
+                  &nbsp; --}}
+                  <span class="borraCliente pointer" data-id="{{ $client->id }}">
+                    <i class="far fa-trash-alt fa-fw text-danger"></i>
+                  </span>
                   &nbsp;
                   {{ $client->name }}
                   <em class="pull-right">{{ $client->address }}</em>
@@ -58,60 +63,7 @@
         </div>
 
         <!-- Modal -->
-        <div class="modal fade" id="nuevoCliente" tabindex="-1" role="dialog" aria-labelledby="nuevoClienteLabel" aria-hidden="true">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-
-              <form action="{{ url('cliente/nuevo') }}" method="post">
-                {{ csrf_field() }}
-
-                <div class="modal-header">
-                  <h5 class="modal-title" id="nuevoClienteLabel">
-                    <i class="fa fa-fw fa-plus" aria-hidden="true"></i>
-                    Añadir nuevo cliente
-                  </h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body">
-                  <div class="col-12">
-
-                    <label class="col-form-label">
-                      <i class="fa fa-fw fa-user" aria-hidden="true"></i>
-                      Nombre
-                    </label>
-                    <input class="form-control" type="text" placeholder="Andreu García Martínez" name="name">
-
-                    <label class="col-form-label">
-                      <i class="fa fa-fw fa-info" aria-hidden="true"></i>
-                      NIF
-                    </label>
-                    <input class="form-control" type="text" placeholder="12345678Z" name="nif">
-
-                    <label class="col-form-label">
-                      <i class="fa fa-fw fa-map-marker" aria-hidden="true"></i>
-                      Dirección fiscal
-                    </label>
-                    <input class="form-control" type="text" placeholder="C/ Falsa 123" name="address">
-
-                    <div class="custom-control custom-checkbox mt-3">
-                      <input type="checkbox" class="custom-control-input" id="persona_fisica_check" name="persona_fisica">
-                      <label class="custom-control-label" for="persona_fisica_check">Es un particular?</label>
-                    </div>
-
-                  </div>
-                </div>
-                <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-fw fa-plus" aria-hidden="true"></i>
-                    Crear
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        </div>
+        @include('layouts.clienteModal')
 
       </div>
     </div>
@@ -122,6 +74,29 @@
 @section('scripts')
 
   <script>
+
+    $(".borraCliente").click(function() {
+
+      if (confirm("¿Borrar seguro?")) {
+
+        $(this).html('<i class="fas fa-sync-alt fa-spin fa-fw text-warning"></i>');
+        var id = $(this).data('id');
+
+        $.post('{{ url('cliente/borrar') }}',
+        {
+          _token: "{{ csrf_token() }}",
+          id: id
+        },
+        function(data, status) {
+          if (status == "success") {
+            if (data.status == '200') {
+              $('#client'+id).slideUp(); // hide
+              // location.reload();
+            }
+          }
+        });
+      }
+    });
 
     var typingTimer; // timer identifier
 
