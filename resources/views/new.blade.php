@@ -12,7 +12,7 @@
     <p>
       <button class="btn btn-primary btn-lg btn-block" id="refresh" role="button">
         <i class="fas fa-plus fa-fw" aria-hidden="true"></i>
-        ¿Otro pago?
+        ¿Añadir otro?
       </button>
     </p>
     <p>
@@ -187,12 +187,13 @@
                   Ver Factura <i class="fas fa-external-link-alt fa-fw"></i>
                 </button>
 
-                <button id="guarda-factura" class="btn btn-epic btn-block mb-3 mt-2">
+                <button type="button" id="guarda-factura" class="btn btn-epic btn-block mb-3 mt-2">
                   <i class="far fa-save fw-fw"></i> Guardar
                 </button>
               </div>
             </div>
           </form>
+
 
           <!-- Modal -->
           @include('layouts.clienteModal')
@@ -239,13 +240,15 @@
 
   $("#guarda-factura").click(function() {
 
-    $(this).html('<i class="fas fa-sync-alt fa-spin fa-fw"></i>');
+    var elBoton = $(this);
+
+    elBoton.html('<i class="fas fa-sync-alt fa-spin fa-fw"></i>');
 
     $.post("{{ url('factura/nuevo') }}",
     {
       _token: "{{ csrf_token() }}",
       id: $('input[name=id]').val(),
-      cliente: $('input[name=cliente]:checked').val(),
+      cliente: $('select[name=cliente]').val(),
       horas: $('input[name=horas]').val(),
       precio: $('input[name=precio]').val(),
       fecha: $('input[name=fecha]').val()
@@ -255,12 +258,12 @@
       $("#guarda-factura").html('Guardar');
 
       if (data.res == '200') {
+        elBoton.html('<i class="far fa-save fw-fw"></i> Guardar');
         $('#block_inicial').slideUp();
         $('#block_final').slideDown();
       } else {
-        $('#alert_block').html('<div class="alert alert-warning fade show" role="alert">' +
-        '<strong>Holy guacamole!</strong> Server says: ' + data.msj +
-        '</div>')
+        $('#load_text').show(); // .slideDown()
+        $('#load_text').html('<em class="text-muted">'+ data.msj +'</em> <i class="fa fa-fw fa-times text-danger"></i>');
       }
 
     });
