@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
+use DB;
 use Auth;
 use PDF;
-use DB;
 
 use App\User;
 use App\Client;
@@ -14,6 +15,7 @@ use App\Factura;
 use App\Gasto;
 use App\Tipo_gasto;
 use App\Jornada;
+use App\Hora;
 
 class HomeController extends Controller
 {
@@ -500,6 +502,56 @@ class HomeController extends Controller
 
     public function horas() {
 
+      Carbon::setLocale('es');
+
+      $user = Auth::user();
+      $horas_dia = 8;
+      $mins = [];
+      $minsTrabajadosTotales = 0;
+
+      foreach ($user->horas as $hora) {
+
+        $entrada = Carbon::parse($hora->entrada);
+        $salida = Carbon::parse($hora->salida);
+
+        // Sumamos los minutos por dias (si no esta definido el dia lo creamos)
+        $mins[$entrada->day] = isset($mins[$entrada->day]) ? $mins[$entrada->day] + $entrada->diffInMinutes($salida) : $entrada->diffInMinutes($salida);
+        $minsTrabajadosTotales += $entrada->diffInMinutes($salida);
+
+      }
+
+      $data['horas_dia'] = $horas_dia;
+      $data['minutos_dia'] = $data['horas_dia'] * 60;
+      $data['minsTrabajadosTotales'] = $minsTrabajadosTotales;
+      $data['horasTrabajadasTotales'] = $data['minsTrabajadosTotales'] / 60;
+      $data['diasTrabajados'] = count($mins);
+      $data['minutosAlDiaPorDiasTrabajados'] = $data['minutos_dia'] * $data['diasTrabajados'];
+      $data['balance_mins'] = $minsTrabajadosTotales - $data['minutosAlDiaPorDiasTrabajados'];
+      $data['balance_horas'] = $data['balance_mins'] / 60;
+      $data['minsTrabajadosPorDia'] = $mins;
+
+      // Variables de compatibilidad tmp
+      $data['balance']['horas'] = $data['horasTrabajadasTotales'] - ($data['horas_dia'] * $data['diasTrabajados']);
+      $data['balance']['minutos'] = $data['minsTrabajadosTotales'];
+      $data['ult_jornadas'] = $user->jornadas()->where('client_id', 2)->orderBy('fecha', 'desc')->take(30)->get();
+
+      $data['ult_jornadas_new'] = $user->horas()->orderBy('entrada', 'desc')->take(30)->get();
+
+      $data['actual'] = $user->horas()->whereNull('salida')->first();
+
+      if ($data['actual']) {
+        $entrada = Carbon::parse($data['actual']->entrada);
+        $data['desdeLas'] = $entrada->format('H:i');
+        $data['desdeLasHuman'] = Carbon::now()->diffForHumans($entrada);
+        // $data['desdeLasHuman'] = $entrada->diffForHumans(Carbon::now());
+      }
+      // echo $entrada->diffForHumans($salida);
+
+      return view('jornadas', $data);
+    }
+
+    public function horasOLD() {
+
       $user = Auth::user();
 
       $horas_dia = 8;
@@ -544,13 +596,40 @@ class HomeController extends Controller
       return view('jornadas', $data);
     }
 
+    public function nuevaGuardaJornada(Request $request) {
+
+      $user = Auth::user();
+      $hora_id = $request->hora_id ?? 0;
+      $nota = $request->nota ?? null;
+
+      $fecha = (isset($request->fecha) && $request->fecha) ? $request->fecha : date('Y-m-d');
+
+      $fecha_final = $request->hora ? Carbon::createFromFormat('Y-m-d H:i', $fecha . " " . $request->hora)->toDateTimeString() : 0;
+
+      if ($hora_id) {
+        $hora = Hora::find($hora_id);
+        $hora->salida = $fecha_final;
+      } else {
+        $hora = new Hora();
+        $hora->user_id = $user->id;
+        $hora->client_id = 2;
+        $hora->nota = $nota;
+        $hora->entrada = $fecha_final;
+      }
+      $hora->save();
+
+      $res['msj'] = 'exito';
+      return response()->json($res, 200);
+
+    }
+
     public function guardaJornada(Request $request) {
 
       $user = Auth::user();
-      $hora = isset($request->hora) ? $request->hora : 0;
-      $fecha = isset($request->fecha) ? $request->fecha : date('Y-m-d');
-      $client = isset($request->client) ? $request->client : 2;
-      $entrada = isset($request->entrada) ? $request->entrada : 0;
+      $hora = $request->hora ?? 0;
+      $fecha = (isset($request->fecha) && $request->fecha) ? $request->fecha : date('Y-m-d');
+      $client = $request->client ?? 2;
+      $entrada = $request->entrada ?? 0;
 
       if ($hora && $fecha) {
 
@@ -571,6 +650,8 @@ class HomeController extends Controller
       }
 
       $res['msj'] = 'exito';
+
+      return $this->nuevaGuardaJornada($request);
 
       return response()->json($res, 200);
     }

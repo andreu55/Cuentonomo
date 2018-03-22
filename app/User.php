@@ -31,4 +31,5 @@ class User extends Authenticatable
     public function clients(){ return $this->hasMany('App\Client'); }
     public function gastos(){ return $this->hasMany('App\Gasto'); }
     public function jornadas(){ return $this->hasMany('App\Jornada'); }
+    public function horas(){ return $this->hasMany('App\Hora'); }
 }

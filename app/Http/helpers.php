@@ -20,6 +20,23 @@ function trimestre($datetime)
   return $trim;
 }
 
+function formatBonito($hora) {
+
+  $expl = explode('.', $hora);
+  $diff_mins = $expl[1] ?? '00';
+
+  switch ($diff_mins) {
+    case '75': $diff_mins = '45'; break;
+    case '25': $diff_mins = '15'; break;
+    case '5': $diff_mins = '30'; break;
+  }
+
+  $res = $expl[0] >= 0 ? '+' : '';
+  $res .= $expl[0] . ":" . $diff_mins;
+
+  return $res;
+}
+
 function traduceDia($dia) {
 
   switch ($dia) {
@@ -45,3 +62,21 @@ function formatGasto($cantidad, $iva_tipo) {
 
   return $res;
 }
+
+// Sacar los dias laborables que han pasado desde hasta hoy
+// $diaAux = Carbon::today();
+// $diasLaborales = 0;
+//
+// for ($dia = $diaAux->day; $dia >= 1; $dia--) {
+//
+//   echo $diaAux->day . " - ";
+//   echo $diaAux->isWeekday() . " - ";
+//
+//   if ($diaAux->isWeekday()) {
+//     $diasLaborales++;
+//   }
+//
+//   $diaAux = $diaAux->subDay();
+//
+//   echo $diasLaborales . "<br>";
+// }
