@@ -82,6 +82,7 @@ class HomeController extends Controller
 
       $data['campos'] = [
         ['tipo' => 'text', 'campo_db' => 'name', 'nombre' => 'Nombre'],
+        ['tipo' => 'number', 'campo_db' => 'horas_por_jornada', 'nombre' => 'Horas por Jornada'],
         ['tipo' => 'text', 'campo_db' => 'email', 'nombre' => 'Email'],
         ['tipo' => 'text', 'campo_db' => 'email_public', 'nombre' => 'Email público'],
         ['tipo' => 'text', 'campo_db' => 'dni', 'nombre' => 'NIF / DNI'],
@@ -505,11 +506,12 @@ class HomeController extends Controller
       Carbon::setLocale('es');
 
       $user = Auth::user();
-      $horas_dia = 8;
+      $horas_dia = $user->horas_por_jornada ?? 8;
       $mins = [];
       $minsTrabajadosTotales = 0;
 
-      foreach ($user->horas as $hora) {
+      // Cogemos sólo los que tengan entrada y SALIDA para que no se vuelva loco
+      foreach ($user->horas()->whereNotNull('salida')->get() as $hora) {
 
         $entrada = Carbon::parse($hora->entrada);
         $salida = Carbon::parse($hora->salida);
@@ -519,6 +521,9 @@ class HomeController extends Controller
         $minsTrabajadosTotales += $entrada->diffInMinutes($salida);
 
       }
+
+      // Ordena por index
+      ksort($mins, SORT_NUMERIC);
 
       $data['horas_dia'] = $horas_dia;
       $data['minutos_dia'] = $data['horas_dia'] * 60;

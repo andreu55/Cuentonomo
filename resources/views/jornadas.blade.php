@@ -10,7 +10,7 @@
   <div class="container">
     <div class="row">
 
-      <div class="col-lg-8 col-md-offset-2">
+      <div class="col-lg-7 col-md-offset-2">
         <h4 class="mb-4">
           @if ($actual)
             <i class="fas fa-sign-in-alt fa-fw"></i> Actualmente <small>desde las <b>{{ $desdeLas }}</b>...</small>
@@ -37,137 +37,103 @@
 
         <hr>
 
-
         <div class="card mb-4">
-									<div class="card-block">
-										<h3 class="card-title">Últimas</h3>
+					<div class="card-block">
+						<h3 class="card-title">Overview</h3>
+            <h6 class="card-subtitle mb-2 text-muted">Horas por día</h6>
 
-										<div class="dropdown card-title-btn-container" title="{{ $horas_dia }} horas al día">
-                      <em class="{{ $balance['horas'] >= 0 ? 'text-success' : 'text-danger' }}">
-                        <b>{{ formatBonito($balance_horas) }}</b> horas
-                      </em>
-										</div>
-
-										<div class="table-responsive">
-											<table class="table">
-												<tbody>
-                          @foreach ($ult_jornadas_new as $j)
-
-                            <tr>
-
-                            @php
-                              $laEntrada = $j->entrada;
-                              $laSalida = $j->salida;
-                            @endphp
-
-                            @if ($j->salida)
-
-                              <td>De <b class="text-info">{{ $laEntrada->format('H:i') }}</b> a <b class="text-primary">{{ $laSalida->format('H:i') }}</b><br></td>
-                              @php
-
-                                // Mostrar aqui la suma total si primera vez esa fecha!!!
-
-                                  // 21 => 1146
-                                  // 20 => 480
-
-                                // $diff = formatBonito($laEntrada->diffInMinutes($laSalida->subHours(8), false)/60);
-                                $dia_actual = $laEntrada->format('d');
-                                if (isset($dia_anterior) && $dia_actual == $dia_anterior) {
-                                  $diff = '';
-                                  $dia_anterior = $dia_actual;
-                                } else {
-                                  $minsHoy = $minsTrabajadosPorDia[$dia_actual] - $minutos_dia;
-                                  $diff = formatBonito($minsHoy/60);
-                                  $dia_anterior = $dia_actual;
-                                }
-
-                              @endphp
-
-                              <td class="text-right">
-                              @if ($diff)
-                                  <small>
-                                    <em class="text-muted">
-                                      {{ traduceDia($laEntrada->format('l')) }} {{ $laEntrada->format('d') }}
-                                    </em>
-                                    &nbsp;
-                                    <em class="{{ $diff >= 0 ? 'text-success' : 'text-danger' }}">
-                                      <b>{{ $diff }}</b>
-                                    </em>
-                                  </small>
-                              @endif
-                            </td>
-
-
-
-                            @else
-                              <td>Actualmente desde las <b class="text-info">{{ $laEntrada->format('H:i') }}</b></td>
-                              <td></td>
-                            @endif
-                          </tr>
-                          @endforeach
-												</tbody>
-											</table>
-										</div>
-									</div>
-								</div>
-
+						<div class="canvas-wrapper">
+							<canvas class="main-chart" id="line-chart" height="200" width="600"></canvas>
+						</div>
+					</div>
+				</div>
 
       </div>
 
-      <div class="col-lg-4">
-        @if ($ult_jornadas)
-          <h5>
-            Últimas
-            <em class="float-right" title="{{ $horas_dia }} horas al día">
-              <small class="{{ $balance['horas'] >= 0 ? 'text-success' : 'text-danger' }}">
-                <b>{{ $balance['horas'] >= 0 ? '+' : '' }}{{ $balance['horas'] }}{{ $balance['minutos'] ? ':'.$balance['minutos'] : '' }}</b> horas
-              </small>
-            </em>
-          </h5>
-          <ul style="margin-top:25px;padding:0">
-            @foreach ($ult_jornadas as $jornada)
-              @php
-                $entrada = new DateTime($jornada->entrada);
-                $salida = new DateTime($jornada->salida);
-                $resta = $entrada->diff($salida);
-                $horas = $resta->h;
-                $minutos = $resta->i;
-                $bal = $horas - 8;
-                if ($minutos) {
-                  // Deberíamos pasarlo todo a minutos y restar correctamente, esto es un apaño
-                  if ($bal < 0) {
-                    if ($minutos == 45) { $minutos = $minutos - 30; }
-                    elseif ($minutos == 15) { $minutos = $minutos + 30; $bal = $bal + 1; }
-                  }
-                  $bal .= ":" . $minutos;
-                }
-                else { $bal .= ":00"; }
-              @endphp
+      <div class="col-lg-5">
+        @if ($ult_jornadas_new)
+          <div class="card mb-4">
+            <div class="card-block">
+              <h3 class="card-title">Balance</h3>
+              <h6 class="card-subtitle mb-2">
+                <a class="text-muted" href="{{ url('user') }}">Horas por jornada: <b>{{ $horas_dia }}</b></a>
+              </h6>
 
-              <li class="list-group-item" title="{{ $jornada->client->name }}">
-                De <b class="text-info">{{ $jornada->entrada ? $entrada->format('H:i') : '??' }}</b>
-                a <b class="text-primary">{{ $jornada->salida ? $salida->format('H:i') : '??' }}</b>
-                @if ($jornada->notas)
-                  <small style="vertical-align:text-top">
-                    <i class="far fa-question-circle fa-fw" data-toggle="tooltip" data-placement="top" title="{{ $jornada->notas }}"></i>
-                  </small>
-                @endif
-                <em class="float-right">
-                  <small class="text-muted">
-                    @php
-                      $fecha_jornada = strtotime($jornada->fecha);
-                    @endphp
-                    {{ traduceDia(date('l', $fecha_jornada)) }}
-                    {{ date('d', $fecha_jornada) }}
-                  </small>
-                  &nbsp;
-                  <small class="{{ $bal >= 0 ? 'text-success' : 'text-danger' }}">
-                    <b>{{ $bal >= 0 ? '+' : '' }}{{ $bal }}</b>
-                  </small>
+              <div class="dropdown card-title-btn-container" title="{{ $horas_dia }} horas al día">
+                <em class="{{ $balance['horas'] >= 0 ? 'text-success' : 'text-danger' }}">
+                  <b>{{ formatBonito($balance_horas) }}</b> horas
                 </em>
-              </li>
-            @endforeach
-          </ul>
+              </div>
+
+              <div class="table-responsive">
+                <table class="table">
+                  <tbody>
+                    @foreach ($ult_jornadas_new as $j)
+
+                      <tr>
+
+                      @php
+                        $laEntrada = $j->entrada;
+                        $laSalida = $j->salida;
+                      @endphp
+
+                      @if ($j->salida)
+                        <td>
+                          De <b class="text-info">{{ $laEntrada->format('H:i') }}</b> a <b class="text-primary">{{ $laSalida->format('H:i') }}</b>
+                          @if ($j->nota)
+                            <small class="text-muted" style="vertical-align:super">
+                              <i class="far fa-question-circle fa-fw" data-toggle="tooltip" data-placement="top" title="{{ $j->nota }}"></i>
+                            </small>
+                          @endif
+                        </td>
+
+                        @php
+                          // $diff = formatBonito($laEntrada->diffInMinutes($laSalida->subHours(8), false)/60);
+                          $dia_actual = $laEntrada->format('d');
+                          if (isset($dia_anterior) && $dia_actual == $dia_anterior) {
+                            $diff = '';
+                            $dia_anterior = $dia_actual;
+                          } else {
+                            $minsHoy = $minsTrabajadosPorDia[$dia_actual] - $minutos_dia;
+                            $diff = formatBonito($minsHoy/60);
+                            $dia_anterior = $dia_actual;
+                          }
+                        @endphp
+
+                        <td class="text-right">
+                          <small>
+                            @if ($diff)
+                              <em class="{{ $diff >= 0 ? 'text-success' : 'text-danger' }}">
+                                <b>{{ $diff }}</b>
+                              </em>
+                              &nbsp;
+                            @endif
+                            <em class="{{ $diff ? '' : 'text-muted' }}">
+                              {{ traduceDia($laEntrada->format('l')) }} {{ $laEntrada->format('d') }}
+                            </em>
+                          </small>
+                      </td>
+
+                      @else
+                        <td>
+                          De <b class="text-info">{{ $laEntrada->format('H:i') }}</b> hasta <b class="text-primary">Ahora</b>
+                          {{-- Actualmente desde las <b class="text-info">{{ $laEntrada->format('H:i') }}</b> --}}
+                        </td>
+                        <td class="text-right">
+                          <small>
+                            <em class="text-muted">
+                              {{ traduceDia($laEntrada->format('l')) }} {{ $laEntrada->format('d') }}
+                            </em>
+                          </small>
+                        </td>
+                      @endif
+                    </tr>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
         @endif
       </div>
     </div>
@@ -217,8 +183,47 @@
     $(document).ready(function(){
       $('#laHora').timepicker('setTime', new Date());
 
-      $('[data-toggle="tooltip"]').tooltip()
+      // $('[data-toggle="tooltip"]').tooltip();
     });
+
+    var labels = [
+      @foreach ($minsTrabajadosPorDia as $dia => $mins)
+        "Día {{ $dia }}",
+      @endforeach
+    ];
+
+    var datos = [
+      @foreach ($minsTrabajadosPorDia as $dia => $mins)
+        {{ $mins/60 }},
+      @endforeach
+    ];
+
+    var lineChartData = {
+  			labels : labels,
+  			datasets : [
+  				{
+  					label: "My First dataset",
+            fillColor : "rgba(128,130,228,0.6)",
+  					strokeColor : "rgba(128,130,228,1)",
+  					pointColor : "rgba(128,130,228,1)",
+  					pointStrokeColor : "#fff",
+  					pointHighlightFill : "#fff",
+  					pointHighlightStroke : "rgba(128,130,228,1)",
+  					data : datos
+  				}
+  			]
+
+  		}
+
+    window.onload = function () {
+			var chart1 = document.getElementById("line-chart").getContext("2d");
+			window.myLine = new Chart(chart1).Line(lineChartData, {
+			responsive: true,
+			scaleLineColor: "rgba(0,0,0,.2)",
+			scaleGridLineColor: "rgba(0,0,0,.05)",
+			scaleFontColor: "#c5c7cc"
+			});
+		};
 
   </script>
 

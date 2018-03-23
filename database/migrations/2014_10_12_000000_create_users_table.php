@@ -17,8 +17,9 @@ class CreateUsersTable extends Migration
             $table->increments('id');
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('email_public')->nullable();
             $table->string('password')->nullable();
+            $table->string('email_public')->nullable();
+            $table->unsignedTinyInteger('horas_por_jornada')->default(8);
             $table->string('dni')->nullable();
             $table->string('phone')->nullable();
             $table->string('address_uno')->nullable();
