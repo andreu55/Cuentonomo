@@ -22,6 +22,8 @@ function trimestre($datetime)
 
 function formatBonito($hora) {
 
+  $res = $hora >= 0 ? '+' : '';
+
   $expl = explode('.', $hora);
   $diff_mins = $expl[1] ?? '00';
 
@@ -31,7 +33,6 @@ function formatBonito($hora) {
     case '5': $diff_mins = '30'; break;
   }
 
-  $res = $expl[0] >= 0 ? '+' : '';
   $res .= $expl[0] . ":" . $diff_mins;
 
   return $res;

@@ -24,7 +24,7 @@ Auth::routes();
 Route::get('home/{tri?}/{ano?}', 'HomeController@index')->where(['tri' => '[1-4]', 'ano' => '[0-9]+']);
 Route::get('new', 'HomeController@new');
 Route::get('user', 'HomeController@user');
-Route::get('horas', 'HomeController@horas');
+Route::get('horas/{mes?}/{ano?}', 'HomeController@horas');
 
 Route::post('pdf/nuevo', 'HomeController@generaPdf');
 
@@ -41,3 +41,22 @@ Route::post('cliente/nuevo', 'HomeController@nuevoCliente');
 Route::post('cliente/borrar', 'HomeController@borraCliente');
 
 Route::post('jornada/guardar', 'HomeController@guardaJornada');
+
+Route::get('test', function () {
+
+  $user = Auth::user();
+  $jornadas = $user->jornadas;
+
+  foreach ($user->jornadas as $j) {
+
+    $hora = new App\Hora();
+      $hora->user_id = 1;
+      $hora->client_id = 2;
+      $hora->nota = $j->notas ?? null;
+      $hora->entrada = $j->fecha . " " . $j->entrada;
+      $hora->salida = $j->fecha . " " . $j->salida;
+    $hora->save();
+  }
+
+  return 'Fin!';
+});

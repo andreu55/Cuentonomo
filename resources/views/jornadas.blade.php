@@ -27,15 +27,13 @@
           </div>
         </div>
 
-        <div class="text-center mt-4 mb-5">
+        <div class="text-center mt-4 mb-4">
           @if ($actual)
             <button class="guardaHora btn btn-lg btn-success btn-block mt-3" data-entrada="0" type="button" data-hora_id="{{ $actual->id }}">Salida <small id="horas_despues">({{ $desdeLasHuman }})</small> <i class="fas fa-sign-out-alt fa-fw"></i></button>
           @else
             <button class="guardaHora btn btn-lg btn-primary btn-block" data-entrada="1" type="button" data-hora_id="0"><i class="fas fa-sign-in-alt fa-fw"></i> Entrada</button>
           @endif
         </div>
-
-        <hr>
 
         <div class="card mb-4">
 					<div class="card-block">
@@ -56,12 +54,26 @@
             <div class="card-block">
               <h3 class="card-title">Balance</h3>
               <h6 class="card-subtitle mb-2">
-                <a class="text-muted" href="{{ url('user') }}">Horas por jornada: <b>{{ $horas_dia }}</b></a>
+                <a class="text-muted" href="{{ url('user') }}">Horas por jornada: <b>{{ $horas_dia }}</b> <i class="fas fa-pencil-alt fa-fw"></i></a>
+                <br>
+                <div class="row">
+                  <div class="col text-center">
+                    <a href="{{ url('horas/'.$ant_mes.'/'.$ant_year) }}" class="btn my-left">
+                      <i class="fas fa-angle-double-left fa-fw fa-2x" aria-hidden="true"></i>
+                    </a>
+                    <em>
+                      <b>{{ $mes }}</b> {{ $year }}
+                    </em>
+                    <a href="{{ url('horas/'.$sig_mes.'/'.$sig_year) }}" class="btn my-right">
+                      <i class="fas fa-angle-double-right fa-fw fa-2x" aria-hidden="true"></i>
+                    </a>
+                  </div>
+                </div>
               </h6>
 
-              <div class="dropdown card-title-btn-container" title="{{ $horas_dia }} horas al día">
-                <em class="{{ $balance['horas'] >= 0 ? 'text-success' : 'text-danger' }}">
-                  <b>{{ formatBonito($balance_horas) }}</b> horas
+              <div class="card-title-btn-container">
+                <em class="{{ $balance_horas >= 0 ? 'text-success' : 'text-danger' }}">
+                  <b>{{ formatBonito($balance_horas) }}</b> Horas
                 </em>
               </div>
 
@@ -89,7 +101,7 @@
 
                         @php
                           // $diff = formatBonito($laEntrada->diffInMinutes($laSalida->subHours(8), false)/60);
-                          $dia_actual = $laEntrada->format('d');
+                          $dia_actual = $laEntrada->format('j');
                           if (isset($dia_anterior) && $dia_actual == $dia_anterior) {
                             $diff = '';
                             $dia_anterior = $dia_actual;
@@ -103,7 +115,7 @@
                         <td class="text-right">
                           <small>
                             @if ($diff)
-                              <em class="{{ $diff >= 0 ? 'text-success' : 'text-danger' }}">
+                              <em class="{{ $diff[0] == '+' ? 'text-success' : 'text-danger' }}">
                                 <b>{{ $diff }}</b>
                               </em>
                               &nbsp;
@@ -198,11 +210,28 @@
       @endforeach
     ];
 
+    var horas_dia = [
+      @foreach ($minsTrabajadosPorDia as $dia => $mins)
+        {{ $horas_dia }},
+      @endforeach
+    ];
+
+    var randomScalingFactor = function(){ return Math.round(Math.random()*1000)};
+
     var lineChartData = {
   			labels : labels,
   			datasets : [
-  				{
-  					label: "My First dataset",
+          {
+  					label: "Horas al día",
+  					fillColor : "rgba(220,220,220,0.2)",
+  					strokeColor : "rgba(220,220,220,1)",
+  					pointColor : "rgba(220,220,220,1)",
+  					pointStrokeColor : "#fff",
+  					pointHighlightFill : "#fff",
+  					pointHighlightStroke : "rgba(220,220,220,1)",
+  					data : horas_dia
+  				},{
+  					label: "Horas reales",
             fillColor : "rgba(128,130,228,0.6)",
   					strokeColor : "rgba(128,130,228,1)",
   					pointColor : "rgba(128,130,228,1)",
