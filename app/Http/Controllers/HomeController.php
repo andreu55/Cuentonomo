@@ -82,7 +82,7 @@ class HomeController extends Controller
 
       $data['campos'] = [
         ['tipo' => 'text', 'campo_db' => 'name', 'nombre' => 'Nombre'],
-        ['tipo' => 'number', 'campo_db' => 'horas_por_jornada', 'nombre' => 'Horas por Jornada'],
+        ['tipo' => 'number', 'campo_db' => 'horas_por_jornada', 'nombre' => 'Horas / Jornada'],
         ['tipo' => 'text', 'campo_db' => 'email', 'nombre' => 'Email'],
         ['tipo' => 'text', 'campo_db' => 'email_public', 'nombre' => 'Email público'],
         ['tipo' => 'text', 'campo_db' => 'dni', 'nombre' => 'NIF / DNI'],

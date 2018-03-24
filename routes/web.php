@@ -42,21 +42,21 @@ Route::post('cliente/borrar', 'HomeController@borraCliente');
 
 Route::post('jornada/guardar', 'HomeController@guardaJornada');
 
-Route::get('test', function () {
-
-  $user = Auth::user();
-  $jornadas = $user->jornadas;
-
-  foreach ($user->jornadas as $j) {
-
-    $hora = new App\Hora();
-      $hora->user_id = 1;
-      $hora->client_id = 2;
-      $hora->nota = $j->notas ?? null;
-      $hora->entrada = $j->fecha . " " . $j->entrada;
-      $hora->salida = $j->fecha . " " . $j->salida;
-    $hora->save();
-  }
-
-  return 'Fin!';
-});
+// Route::get('migrationJornadasToHoras', function () {
+//
+//   $user = Auth::user();
+//   $jornadas = $user->jornadas;
+//
+//   foreach ($user->jornadas as $j) {
+//
+//     $hora = new App\Hora();
+//       $hora->user_id = 1;
+//       $hora->client_id = 2;
+//       $hora->nota = $j->notas ?? null;
+//       $hora->entrada = $j->fecha . " " . $j->entrada;
+//       $hora->salida = $j->fecha . " " . $j->salida;
+//     $hora->save();
+//   }
+//
+//   return 'Fin!';
+// });
