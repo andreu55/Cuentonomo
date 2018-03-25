@@ -41,6 +41,7 @@ Route::post('cliente/nuevo', 'HomeController@nuevoCliente');
 Route::post('cliente/borrar', 'HomeController@borraCliente');
 
 Route::post('jornada/guardar', 'HomeController@guardaJornada');
+Route::post('hora/borrar', 'HomeController@borraHora');
 
 // Route::get('migrationJornadasToHoras', function () {
 //

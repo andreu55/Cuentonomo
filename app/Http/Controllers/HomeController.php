@@ -202,6 +202,23 @@ class HomeController extends Controller
       return view('jornadas', $data);
     }
 
+    public function borraHora(Request $request) {
+
+      $id = $request->id ?? 0;
+
+      if ($id) {
+        if ($hora = Hora::find($id)) {
+
+          $hora->delete();
+          $res['status'] = 200;
+          $res['msj'] = 'Borrado con éxito!';
+
+        } else { $res['status'] = 400; $res['msj'] = 'Hora no encontrada'; }
+      } else { $res['status'] = 406; $res['msj'] = 'Faltan datos!'; }
+
+      return response()->json($res, $res['status']);
+    }
+
     public function horasOLD() {
 
       $user = Auth::user();

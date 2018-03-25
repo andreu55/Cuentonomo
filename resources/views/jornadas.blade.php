@@ -35,7 +35,7 @@
           @endif
         </div>
 
-        <div class="card mb-4">
+        <div class="card mb-4 d-none d-sm-block">
 					<div class="card-block">
 						<h3 class="card-title">Overview</h3>
             <h6 class="card-subtitle mb-2 text-muted">Horas por día</h6>
@@ -81,8 +81,7 @@
                 <table class="table">
                   <tbody>
                     @foreach ($ult_jornadas_new as $j)
-
-                      <tr>
+                      <tr id="bloque_linea_hora{{$j->id}}" onclick="borraHora({{$j->id}})" class="pointer">
 
                       @php
                         $laEntrada = $j->entrada;
@@ -90,6 +89,7 @@
                       @endphp
 
                       @if ($j->salida)
+                        {{-- Si tiene entrada y salida --}}
                         <td>
                           De <b class="text-info">{{ $laEntrada->format('H:i') }}</b> a <b class="text-primary">{{ $laSalida->format('H:i') }}</b>
                           @if ($j->nota)
@@ -127,7 +127,9 @@
                       </td>
 
                       @else
+                        {{-- Si esta actualmente --}}
                         <td>
+                          {{-- <i class="fas fa-eraser"></i> --}}
                           De <b class="text-info">{{ $laEntrada->format('H:i') }}</b> hasta <b class="text-primary">Ahora</b>
                           {{-- Actualmente desde las <b class="text-info">{{ $laEntrada->format('H:i') }}</b> --}}
                         </td>
@@ -155,7 +157,37 @@
 @section('scripts')
 
   <script src="https://cdn.jsdelivr.net/npm/timepicker@1.11.12/jquery.timepicker.min.js"></script>
+  <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
   <script type="text/javascript">
+
+    function borraHora(id) {
+
+      swal({
+        title: "¿Borrar jornada de trabajo?",
+        text: "Una vez borrada, no podrás recuperarla!",
+        icon: "warning",
+        buttons: true,
+        dangerMode: true,
+      })
+      .then((willDelete) => {
+        if (willDelete) {
+
+          $('#bloque_linea_hora'+id+' td:first').html('<i class="fa fa-fw fa-cog fa-spin text-warning"></i> <em class="text-muted">Borrando...</em>');
+
+          $.post("{{ url('hora/borrar') }}",
+          {
+            _token: "{{ csrf_token() }}",
+            id: id
+          },
+          function(data, status) {
+            if (status == 'success') {
+              $('#bloque_linea_hora'+id).hide(); // hide
+              location.reload();
+            }
+          });
+        }
+      });
+    }
 
     $('#laHora').timepicker({
       scrollDefault: 'now',
