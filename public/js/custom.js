@@ -11,6 +11,7 @@ String.prototype.replaceAll = function(search, replacement) {
 	return target.split(search).join(replacement);
 };
 
+// Funciones molonas para convertir el texto del usuario y buscar en maps y contacts
 function iraUrlInput(url, inputId = false) {
 
 	if (inputId) {
@@ -31,3 +32,22 @@ function iraUrlInput(url, inputId = false) {
 $(function() {
 	$('[data-toggle="tooltip"]').tooltip();
 });
+
+function logout() {
+
+  event.preventDefault();
+
+  swal({
+    title: "¿Salir de cuentónomo?",
+    buttons: true
+  })
+  .then((willExit) => {
+    if (willExit) {
+      swal("¡Nos vemos!", {
+        icon: "success",
+        buttons: false
+      });
+      document.getElementById('logout-form').submit();
+    }
+  });
+}

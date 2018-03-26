@@ -130,7 +130,7 @@ class HomeController extends Controller
 
       $horas_dia = $user->horas_por_jornada ?? 8;
       $mins = [];
-      $minsTrabajadosTotales = $countTotal = 0;
+      $minsTrabajadosTotales = $numeroDeDiasTrabajados = $entradaAnteriorDay = 0;
 
       $este_mes_formated = $este_mes->toDateTimeString();
       $fin_mes = $este_mes->endOfMonth()->toDateTimeString();
@@ -153,13 +153,19 @@ class HomeController extends Controller
 
       }
 
+      // Sacamos los totales
       foreach ($user->horas()->whereNotNull('salida')->get() as $hora) {
 
         $entrada = Carbon::parse($hora->entrada);
         $salida = Carbon::parse($hora->salida);
 
         $minsTrabajadosTotales += $entrada->diffInMinutes($salida);
-        $countTotal++;
+
+        // Si es un nuevo dia lo sumamos (ahora puede ser una jornada partida)
+        if ($entrada->day != $entradaAnteriorDay) {
+          $numeroDeDiasTrabajados++;
+        }
+        $entradaAnteriorDay = $entrada->day;
       }
 
       // echo "<pre>";
@@ -172,20 +178,18 @@ class HomeController extends Controller
       $data['horas_dia'] = $horas_dia;
       $data['minutos_dia'] = $data['horas_dia'] * 60;
       $data['minsTrabajadosTotales'] = $minsTrabajadosTotales;
-      $data['horasTrabajadasTotales'] = $data['minsTrabajadosTotales'] / 60;
+
 
       $data['diasTrabajadosMes'] = count($mins);
 
-      $data['diasTrabajados'] = $countTotal;
+      $data['diasTrabajados'] = $numeroDeDiasTrabajados;
       $data['minutosAlDiaPorDiasTrabajados'] = $data['minutos_dia'] * $data['diasTrabajados'];
       $data['balance_mins'] = $minsTrabajadosTotales - $data['minutosAlDiaPorDiasTrabajados'];
-      $data['balance_horas'] = $data['balance_mins'] / 60;
       $data['minsTrabajadosPorDia'] = $mins;
 
-      // Variables de compatibilidad tmp
-      // $data['balance']['horas'] = $data['horasTrabajadasTotales'] - ($data['horas_dia'] * $data['diasTrabajados']);
-      // $data['balance']['minutos'] = $data['minsTrabajadosTotales'];
-      // $data['ult_jornadas'] = $user->jornadas()->where('client_id', 2)->orderBy('fecha', 'desc')->take(30)->get();
+
+      $data['horasTrabajadasTotales'] = $data['minsTrabajadosTotales'] / 60;
+      $data['balance_horas'] = $data['balance_mins'] / 60;
 
       $data['ult_jornadas_new'] = $user->horas()->whereBetween('entrada', [$este_mes_formated, $fin_mes])->orderBy('entrada', 'desc')->take(30)->get();
 

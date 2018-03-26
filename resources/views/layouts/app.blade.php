@@ -61,7 +61,7 @@
 					@endforeach
 				</ul>
 
-				<a class="logout-button" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-power-off fa-fw"></i> Logout</a>
+				<a class="logout-button d-none d-sm-block" href="{{ route('logout') }}" onclick="logout()"><i class="fas fa-power-off fa-fw"></i> Logout</a>
 				<form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
 					{{ csrf_field() }}
 				</form>
@@ -96,7 +96,7 @@
 							@foreach ($paginas as $p)
 								<a class="dropdown-item" href="{{ url($p['url']) }}"><i class="{{ $p['icon'] }} fa-fw"></i> {{ $p['nombre'] }}</a>
 							@endforeach
-							<a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="fas fa-power-off fa-fw"></i> Logout</a>
+							<a class="dropdown-item" href="{{ route('logout') }}" onclick="logout()"><i class="fas fa-power-off fa-fw"></i> Logout</a>
 						</div>
 					</div>
 					@endguest
@@ -129,6 +129,7 @@
 		{{-- <script src="{{ asset('public/js/easypiechart.js') }}"></script> --}}
 		{{-- <script src="{{ asset('public/js/easypiechart-data.js') }}"></script> --}}
 		{{-- <script src="{{ asset('public/js/bootstrap-datepicker.js') }}"></script> --}}
+		<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 		<script src="{{ asset('public/js/custom.js') }}"></script>
 
 		@yield('scripts')

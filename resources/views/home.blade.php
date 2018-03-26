@@ -136,7 +136,7 @@
             <h3 class="card-title">Gastos</h3>
 
             <div class="dropdown card-title-btn-container">
-              <button onclick="window.location.href = '{{ url('new') }}'" class="btn btn-sm btn-subtle" type="button"><em class="fas fa-plus fa-fw"></em> Añadir nuevo</button>
+              <button onclick="window.location.href = '{{ url('new') }}'" class="btn btn-sm btn-subtle" type="button"><em class="fas fa-plus fa-fw"></em> Nuevo</button>
 
               <div class="d-none d-sm-inline">
                 <button class="btn btn-sm btn-subtle dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
