@@ -179,9 +179,9 @@
                         <div class="text-muted">{{ $g->created_at->format('M') }}</div>
                       </div>
                       <div class="col-10">
-                        <h4>
+                        <h4 class="borra-gasto pointer" data-id="<?=$g->id?>">
                           <?=$g->concepto?>
-                          <i class="far fa-trash-alt fa-fw text-danger float-right borra-gasto pointer" data-id="<?=$g->id?>"></i>
+                          <i class="far fa-trash-alt fa-fw text-danger float-right"></i>
                         </h4>
                         <p>
                           {!! formatGasto($g->cantidad, $g->tipo_gasto->iva) !!}
@@ -224,49 +224,65 @@
 
   $(".borra-gasto").click(function() {
 
-    $(this).html('<i class="fas fa-sync-alt fa-spin fa-fw"></i>');
-    var id = $(this).data('id');
+    swal({
+      title: "¿Borrar gasto?",
+      icon: "warning",
+      dangerMode: true,
+      buttons: true
+    })
+    .then((okey) => {
+      if (okey) {
+        $(this).html('<i class="fas fa-sync-alt fa-spin fa-fw"></i>');
+        var id = $(this).data('id');
 
-    $.post('{{ url('gasto/borrar') }}',
-    {
-      _token: "{{ csrf_token() }}",
-      id: id
-    },
-    function(data, status){
+        $.post('{{ url('gasto/borrar') }}',
+        {
+          _token: "{{ csrf_token() }}",
+          id: id
+        },
+        function(data, status) {
 
-      if (status == "success") {
+          if (status == "success") {
 
-        if (data.status == '200') {
-          $('#gasto'+id).slideUp();
-        }
+            if (data.status == '200') {
+              $('#gasto'+id).slideUp();
+            }
+          }
+        });
       }
     });
   });
 
   $(".borra-factura").click(function() {
 
-    if (confirm("¿Borrar seguro?")) {
+    swal({
+      title: "¿Borrar esta factura?",
+      icon: "warning",
+      dangerMode: true,
+      buttons: true
+    })
+    .then((okey) => {
+      if (okey) {
+        $(this).html('<i class="fas fa-sync-alt fa-spin fa-fw"></i>');
+        var id = $(this).data('id');
 
-      $(this).html('<i class="fas fa-sync-alt fa-spin fa-fw"></i>');
-      var id = $(this).data('id');
+        $.post('{{ url('factura/borrar') }}',
+        {
+          _token: "{{ csrf_token() }}",
+          id: id
+        },
+        function(data, status){
 
-      $.post('{{ url('factura/borrar') }}',
-      {
-        _token: "{{ csrf_token() }}",
-        id: id
-      },
-      function(data, status){
+          if (status == "success") {
 
-        if (status == "success") {
-
-          if (data.status == '200') {
-            $('#factura'+id).hide();
-            location.reload();
+            if (data.status == '200') {
+              $('#factura'+id).hide();
+              location.reload();
+            }
           }
-        }
-      });
-    }
-
+        });
+      }
+    });
   });
 
   $(".pagada-factura").click(function() {

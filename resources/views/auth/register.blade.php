@@ -15,6 +15,8 @@
             <span class="help-block">
               <strong>{{ $errors->first('name') }}</strong>
             </span>
+          @else
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
           @endif
         </div>
         <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
