@@ -201,6 +201,36 @@
 
       <div class="col-md-4">
 
+        @foreach ($tipo_gastos as $tipo_gasto)
+
+          @php
+            $aux = 'total_' . $tipo_gasto->id;
+            $tipo_gasto_percent_total = $tipo_gasto->total * $tipo_gasto->iva;
+          @endphp
+
+          @if ($tipo_gasto->total)
+            <div class="card mb-2">
+              <div class="card-body">
+                <h5 class="card-title">
+                  {{ $tipo_gasto->name }}
+                  <small> total</small>
+                </h5>
+                <h6 class="card-subtitle mb-2 text-muted">
+
+                  <span class="text-danger">{{ $tipo_gasto->total }}€</span>
+                  <span class="text-primary"> * {{ $tipo_gasto->iva }}%</span> =
+                  <span class="text-success"> {{ $tipo_gasto_percent_total }}</span>
+
+                  <span class="float-right">
+                    <i class="far fa-hand-point-right"></i>
+                    <span class="text-success"> {{ number_format($tipo_gasto_percent_total, 2) }}€</span>
+                  </span>
+                </h6>
+              </div>
+            </div>
+          @endif
+        @endforeach
+
         @if ($iva_total && $iva_total_gastos)
           <div class="card">
             <div class="card-body">

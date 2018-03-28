@@ -25,6 +25,7 @@ class HomeController extends Controller
 
     public function index($tri = 0, $ano = 0) {
 
+      $user = Auth::user();
       $trimestre = $tri ? $tri : trimestre(date('Y-m-d H:i:s'));
       $year = $ano ? $ano : date('Y');
 
@@ -56,8 +57,14 @@ class HomeController extends Controller
         // Cogemos las del trimestre
         $data['trimestre'] = $trimestre;
         $data['year'] = $year;
-        $data['facturas'] = Factura::where('user_id', Auth::id())->whereBetween('created_at', [$fecha_ini, $fecha_fin])->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
-        $data['gastos'] = Gasto::where('user_id', Auth::id())->whereBetween('created_at', [$fecha_ini, $fecha_fin])->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
+        $data['facturas'] = $user->facturas()->whereBetween('created_at', [$fecha_ini, $fecha_fin])->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
+        $data['gastos'] = $user->gastos()->whereBetween('created_at', [$fecha_ini, $fecha_fin])->orderBy('created_at', 'DESC')->orderBy('id', 'DESC')->get();
+        // $data['total_gastos'] = $user->gastos()->whereBetween('created_at', [$fecha_ini, $fecha_fin])->sum('cantidad');
+
+        $data['tipo_gastos'] = Tipo_gasto::get();
+        foreach ($data['tipo_gastos'] as $gasto) {
+          $gasto['total'] = $user->gastos()->where('tipo_gasto_id', $gasto->id)->whereBetween('created_at', [$fecha_ini, $fecha_fin])->sum('cantidad');
+        }
       }
 
       return view('home', $data);
