@@ -133,31 +133,36 @@
 
         <div class="card mb-4">
           <div class="card-block">
-            <h3 class="card-title">Gastos</h3>
+            <h3 id="title_gastos" class="card-title">Total gastos</h3>
 
             <div class="dropdown card-title-btn-container">
               <button onclick="window.location.href = '{{ url('new') }}'" class="btn btn-sm btn-subtle" type="button"><em class="fas fa-plus fa-fw"></em> Nuevo</button>
 
               <div class="d-none d-sm-inline">
                 <button class="btn btn-sm btn-subtle dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  <em class="fas fa-cog"></em>
+                  <em class="fas fa-filter"></em>
                 </button>
                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                  <a class="dropdown-item" href="#"><i class="fas fa-exclamation-circle fa-fw"></i> Esto no hase na</a>
-                  <a class="dropdown-item" href="#"><i class="fas fa-star fa-fw"></i> pero oye,</a>
-                  <a class="dropdown-item" href="#"><i class="far fa-thumbs-up fa-fw"></i> queda de categoría</a>
+                  @foreach ($tipo_gastos as $tipo_gasto)
+                    <li class="dropdown-item pointer" onclick="filtra_gasto({{ $tipo_gasto->id }})">
+                      <i class="{{ $tipo_gasto->icon }} fa-fw"></i> &nbsp;{{ $tipo_gasto->name }}
+                    </li>
+                  @endforeach
+                  <li id="reset_filtro_gastos" class="dropdown-item pointer" onclick="filtra_gasto(0)" style="display:none">
+                    <i class="fas fa-undo-alt fa-fw"></i> &nbsp;Total gastos
+                  </li>
                 </div>
               </div>
             </div>
 
-            <h6 class="card-subtitle mb-2 text-muted">Más recientes primero</h6>
+            <h6 class="card-subtitle mb-2 text-muted">Recientes primero</h6>
 
             <div class="divider" style="margin-top: 1rem;"></div>
 
             <div class="articles-container">
 
               @php
-              $cantidad_total = $base_total_gastos = $iva_total_gastos = 0;
+                $cantidad_total = $base_total_gastos = $iva_total_gastos = 0;
               @endphp
 
               @foreach ($gastos as $key => $g)
@@ -171,7 +176,7 @@
                 $iva_total_gastos += round(($base * $g->tipo_gasto->iva), 2); // Con esa base, sacamos el iva del gasto
                 @endphp
 
-                <div class="article" id="gasto<?=$g->id?>">
+                <div class="article tipo_gasto-{{ $g->tipo_gasto_id }}" id="gasto<?=$g->id?>">
                   <div class="col-xs-12">
                     <div class="row">
                       <div class="col-2 date">
@@ -181,7 +186,7 @@
                       <div class="col-10">
                         <h4 class="borra-gasto pointer" data-id="<?=$g->id?>">
                           <?=$g->concepto?>
-                          <i class="far fa-trash-alt fa-fw text-danger float-right"></i>
+                          <i class="far fa-sm fa-trash-alt fa-fw text-danger float-right"></i>
                         </h4>
                         <p>
                           {!! formatGasto($g->cantidad, $g->tipo_gasto->iva) !!}
@@ -201,6 +206,27 @@
 
       <div class="col-md-4">
 
+        @if ($iva_total && $iva_total_gastos)
+          <div class="card mb-2">
+            <div class="card-body">
+              <h5 class="card-title">
+                Resumen IVA
+                <small class="float-right">
+                  <b>{{ $trimestre }}º</b> trimestre
+                </small>
+              </h5>
+              {{-- <h6 class="card-subtitle mb-2 text-muted"><b>{{ $trimestre }}</b>º trimestre</h6> --}}
+              <p class="card-text">Has recibido <b class="text-warning">{{ $iva_total }}€</b> en IVA este trimestre, puedes desgravarte <b class="text-success">{{ $iva_total_gastos }}€</b> gracias a los gastos, debes ingresar un total de:</p>
+              <h4 class="card-text mb-3"><b class="text-primary">{{ $iva_total - $iva_total_gastos }}€</b></h4>
+              <p class="card-text">
+                <em>
+                  Este total es diferente de los totales por tipo porque aquí hemos sumado los gastos ya redondeados.
+                </em>
+              </p>
+            </div>
+          </div>
+        @endif
+
         @foreach ($tipo_gastos as $tipo_gasto)
 
           @php
@@ -213,34 +239,24 @@
               <div class="card-body">
                 <h5 class="card-title">
                   {{ $tipo_gasto->name }}
-                  <small> total</small>
+                  <small class="float-right">
+                    Total <b>{{ $trimestre }}º</b> Tr.
+                  </small>
                 </h5>
-                <h6 class="card-subtitle mb-2 text-muted">
+                <h6 class="card-subtitle mt-1 mb-1 text-muted">
 
                   <span class="text-danger">{{ $tipo_gasto->total }}€</span>
                   <span class="text-primary"> * {{ $tipo_gasto->iva }}%</span> =
                   <span class="text-success"> {{ $tipo_gasto_percent_total }}</span>
 
-                  <span class="float-right">
-                    <i class="far fa-hand-point-right"></i>
-                    <span class="text-success"> {{ number_format($tipo_gasto_percent_total, 2) }}€</span>
-                  </span>
                 </h6>
+                <b class="text-success mb-0 float-right">
+                  {{ number_format($tipo_gasto_percent_total, 2) }}€
+                </b>
               </div>
             </div>
           @endif
         @endforeach
-
-        @if ($iva_total && $iva_total_gastos)
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Resumen IVA</h5>
-              <h6 class="card-subtitle mb-2 text-muted">{{ $trimestre }}º trimestre</h6>
-              <p class="card-text">Has recibido <b class="text-warning">{{ $iva_total }}€</b> en IVA este trimestre, puedes desgravarte <b class="text-success">{{ $iva_total_gastos }}€</b> gracias a los gastos, debes ingresar un total de:</p>
-              <h4 class="card-text"><b class="text-primary">{{ $iva_total - $iva_total_gastos }}€</b></h4>
-            </div>
-          </div>
-        @endif
 
       </div>
     </div>
@@ -251,6 +267,32 @@
 
   {{-- <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script> --}}
   <script type="text/javascript">
+
+  function filtra_gasto(tipo_id) {
+
+    if (tipo_id) {
+      @foreach ($tipo_gastos as $tipo_gasto)
+        $('.tipo_gasto-'+{{ $tipo_gasto->id }}).hide();
+
+        if (tipo_id == {{ $tipo_gasto->id }}) {
+          $('#title_gastos').hide().text('{{ $tipo_gasto->name }}').fadeIn();
+        }
+      @endforeach
+
+      $('.tipo_gasto-'+tipo_id).show();
+      $('#reset_filtro_gastos').show();
+
+    } else {
+
+      @foreach ($tipo_gastos as $tipo_gasto)
+        $('.tipo_gasto-'+{{ $tipo_gasto->id }}).show();
+      @endforeach
+
+      $('#title_gastos').hide().text('Total gastos').fadeIn();
+      $('#reset_filtro_gastos').hide();
+    }
+
+  }
 
   $(".borra-gasto").click(function() {
 
