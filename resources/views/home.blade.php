@@ -138,7 +138,7 @@
             <div class="dropdown card-title-btn-container">
               <button onclick="window.location.href = '{{ url('new') }}'" class="btn btn-sm btn-subtle" type="button"><em class="fas fa-plus fa-fw"></em> Nuevo</button>
 
-              <div class="d-none d-sm-inline">
+              {{-- <div class="d-none d-sm-inline"> --}}
                 <button class="btn btn-sm btn-subtle dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                   <em class="fas fa-filter"></em>
                 </button>
@@ -152,7 +152,7 @@
                     <i class="fas fa-undo-alt fa-fw"></i> &nbsp;Total gastos
                   </li>
                 </div>
-              </div>
+              {{-- </div> --}}
             </div>
 
             <h6 class="card-subtitle mb-2 text-muted">Recientes primero</h6>
