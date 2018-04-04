@@ -29,6 +29,7 @@ class CreateUsersTable extends Migration
             $table->string('banco_name')->nullable();
             $table->string('banco_cuenta')->nullable();
             $table->string('api_token', 60)->nullable();
+            $table->string('access_token', 220)->nullable(); // ALTER TABLE `users` ADD `access_token` VARCHAR(220) NULL AFTER `api_token`;
             $table->rememberToken();
             $table->timestamps();
         });

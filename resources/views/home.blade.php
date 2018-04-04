@@ -2,6 +2,22 @@
 
 @section('title', 'Home')
 
+@section('invitado')
+  @if (isset($invitado))
+    <div class="text-muted">
+      Acceso <b>concedido hasta</b> {{ $restante }} <i class="fas fa-exclamation-triangle text-danger fa-fw"></i>
+    </div>
+  @else
+    @if ($user->access_token)
+      <div class="text-muted">
+        <i class="fas fa-exclamation-triangle text-danger fa-fw"></i>
+        Concediendo acceso en
+        <input type="text" onclick="$(this).select();" class="form-control" value="{{ url('home/' . $trimestre . '/' . $year . '/' . $user->id . '/' . $user->access_token) }}">
+      </div>
+    @endif
+  @endif
+@endsection
+
 @section('css')
   <style media="screen">
   .my-left, .my-right { transition: all 0.5s ease }
@@ -26,14 +42,29 @@
         <h2>
           <span class="d-none d-sm-inline">
             Facturas
-            <button onclick="window.location.href = '{{ url('new') }}'" class="btn btn-sm btn-subtle" type="button"><em class="fas fa-plus fa-fw"></em> Nueva</button>
+            @if (!isset($invitado))
+              <button onclick="window.location.href = '{{ url('new') }}'" class="btn btn-sm btn-subtle" type="button">
+                <i class="fas fa-plus fa-fw"></i> Nueva
+              </button>
+            @endif
           </span>
           <em class="float-right">
-            <a href="{{ url('home/'.$ant_trim.'/'.$ant_year) }}" class="btn my-left">
+
+            @php
+              $url_aux_ant = 'home/'.$ant_trim.'/'.$ant_year;
+              $url_aux_sig = 'home/'.$sig_trim.'/'.$sig_year;
+
+              if (isset($invitado)) {
+                $url_aux_ant .= '/'.$user_id_invitado.'/'.$access_token;
+                $url_aux_sig .= '/'.$user_id_invitado.'/'.$access_token;
+              }
+            @endphp
+
+            <a href="{{ url($url_aux_ant) }}" class="btn my-left">
               <i class="fas fa-angle-double-left fa-fw fa-2x" aria-hidden="true"></i>
             </a>
             {{ $trimestre }}º Trimestre {{ $year }}
-            <a href="{{ url('home/'.$sig_trim.'/'.$sig_year) }}" class="btn my-right">
+            <a href="{{ url($url_aux_sig) }}" class="btn my-right">
               <i class="fas fa-angle-double-right fa-fw fa-2x" aria-hidden="true"></i>
             </a>
           </em>
@@ -102,8 +133,19 @@
                 <td>{{  $irpf  }}</td>
                 <td>{{  $total  }}</td>
                 <td class="float-right">
-                  <button class="btn btn-sm btn-success pagada-factura mr-1" data-id="{{ $f->id }}"><i class="fas fa-<?= $f->pagada ? "undo" : "check" ?> fa-fw"></i></button>
-                  <button class="btn btn-sm btn-danger borra-factura" data-id="{{ $f->id }}"><i class="far fa-trash-alt fa-fw"></i></button>
+                  @if ($f->url_temp)
+                    <a href="{{ url( 'public/facturas/' . $user->id . '/' . $f->url_temp ) }}" target="_blank" class="text-info mr-1">
+                      <i class="fas fa-download"></i>
+                    </a>
+                  @endif
+                  @if (!isset($invitado))
+                    <button class="btn btn-sm btn-success pagada-factura" data-id="{{ $f->id }}">
+                      <i class="fas fa-<?= $f->pagada ? "undo" : "check" ?>"></i>
+                    </button>
+                    <button class="btn btn-sm btn-danger borra-factura" data-id="{{ $f->id }}">
+                      <i class="far fa-trash-alt"></i>
+                    </button>
+                  @endif
                 </td>
               </tr>
             @endforeach
@@ -136,7 +178,11 @@
             <h3 id="title_gastos" class="card-title">Total gastos</h3>
 
             <div class="dropdown card-title-btn-container">
-              <button onclick="window.location.href = '{{ url('new') }}'" class="btn btn-sm btn-subtle" type="button"><em class="fas fa-plus fa-fw"></em> Nuevo</button>
+              @if (!isset($invitado))
+                <button onclick="window.location.href = '{{ url('new') }}'" class="btn btn-sm btn-subtle" type="button">
+                  <i class="fas fa-plus fa-fw"></i> Nuevo
+                </button>
+              @endif
 
               {{-- <div class="d-none d-sm-inline"> --}}
                 <button class="btn btn-sm btn-subtle dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -186,7 +232,9 @@
                       <div class="col-10">
                         <h4 class="borra-gasto pointer" data-id="<?=$g->id?>">
                           <?=$g->concepto?>
-                          <i class="far fa-sm fa-trash-alt fa-fw text-danger float-right"></i>
+                          @if (!isset($invitado))
+                            <i class="far fa-sm fa-trash-alt fa-fw text-danger float-right"></i>
+                          @endif
                         </h4>
                         <p>
                           {!! formatGasto($g->cantidad, $g->tipo_gasto->iva) !!}

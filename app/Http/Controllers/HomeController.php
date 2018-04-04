@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Contracts\Encryption\DecryptException;
 
 use DB;
 use Auth;
@@ -19,13 +20,40 @@ use App\Hora;
 
 class HomeController extends Controller
 {
-    public function __construct() {
-      $this->middleware('auth');
-    }
 
-    public function index($tri = 0, $ano = 0) {
+    public function index($tri = 0, $ano = 0, $user_id = 0, $token = '') {
 
       $user = Auth::user();
+
+      if (!$user) {
+
+        if (!$tri || !$ano || !$user_id || !$token) {
+          return abort(404);
+        }
+
+        try {
+          $fecha_url = decrypt($token);
+        } catch (DecryptException $e) {
+          return abort(404);
+        }
+
+        Carbon::setLocale('es');
+
+        $fecha = Carbon::createFromFormat('Y-m-d H:i:s', $fecha_url);
+
+        if ($fecha->isFuture()) {
+
+          $user = User::find($user_id);
+          $data['restante'] = $fecha->diffForHumans();
+          $data['invitado'] = 1;
+          $data['user_id_invitado'] = $user_id;
+          $data['access_token'] = $token;
+
+        } else {
+          return redirect('login');
+        }
+      }
+
       $trimestre = $tri ? $tri : trimestre(date('Y-m-d H:i:s'));
       $year = $ano ? $ano : date('Y');
 
@@ -66,6 +94,8 @@ class HomeController extends Controller
           $gasto['total'] = $user->gastos()->where('tipo_gasto_id', $gasto->id)->whereBetween('created_at', [$fecha_ini, $fecha_fin])->sum('cantidad');
         }
       }
+
+      $data['user'] = $user;
 
       return view('home', $data);
     }

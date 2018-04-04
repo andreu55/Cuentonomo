@@ -20,6 +20,7 @@ class CreateFacturasTable extends Migration
             $table->unsignedInteger('client_id')->nullable();
             $table->unsignedDecimal('horas', 8, 2)->default(0);
             $table->unsignedDecimal('precio', 8, 2)->default(15);
+            $table->string('url_temp')->nullable(); // ALTER TABLE `facturas` ADD `url_temp` VARCHAR(191) NULL AFTER `precio`;
             $table->unsignedTinyInteger('pagada')->default(0);
             $table->timestamps();
 

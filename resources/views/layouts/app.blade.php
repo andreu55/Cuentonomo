@@ -71,6 +71,7 @@
 				<header class="page-header row justify-center">
 					<div class="col-md-6 col-lg-7">
 						<h1 class="float-left text-center text-md-left">@yield('title', 'Cuentónomo')</h1>
+						@yield('invitado')
 						<div id="load_text" class="pull-right"><i class="fa fa-fw fa-cog fa-spin text-warning" style="display:none"></i></div>
 					</div>
 

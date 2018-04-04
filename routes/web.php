@@ -21,27 +21,54 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('home/{tri?}/{ano?}', 'HomeController@index')->where(['tri' => '[1-4]', 'ano' => '[0-9]+']);
-Route::get('new', 'HomeController@new');
-Route::get('user', 'HomeController@user');
-Route::get('horas/{mes?}/{ano?}', 'HomeController@horas');
+Route::get('home/{tri?}/{ano?}/{user_id?}/{token?}', 'HomeController@index')->where(['tri' => '[1-4]', 'ano' => '[0-9]+']);
 
-Route::post('pdf/nuevo', 'HomeController@generaPdf');
+Route::group(['middleware' => ['auth']], function() {
 
-Route::post('user/editar', 'HomeController@editaUserField');
+  Route::get('new', 'HomeController@new');
+  Route::get('user', 'HomeController@user');
+  Route::get('horas/{mes?}/{ano?}', 'HomeController@horas');
 
-Route::post('gasto/nuevo', 'HomeController@gasto_nuevo');
-Route::post('gasto/borrar', 'HomeController@borraGasto');
+  Route::post('pdf/nuevo', 'HomeController@generaPdf');
 
-Route::post('factura/nuevo', 'HomeController@factura_nuevo');
-Route::post('factura/borrar', 'HomeController@borraFactura');
-Route::post('factura/pagada', 'HomeController@pagadaFactura');
+  Route::post('user/editar', 'HomeController@editaUserField');
 
-Route::post('cliente/nuevo', 'HomeController@nuevoCliente');
-Route::post('cliente/borrar', 'HomeController@borraCliente');
+  Route::post('gasto/nuevo', 'HomeController@gasto_nuevo');
+  Route::post('gasto/borrar', 'HomeController@borraGasto');
 
-Route::post('jornada/guardar', 'HomeController@guardaJornada');
-Route::post('hora/borrar', 'HomeController@borraHora');
+  Route::post('factura/nuevo', 'HomeController@factura_nuevo');
+  Route::post('factura/borrar', 'HomeController@borraFactura');
+  Route::post('factura/pagada', 'HomeController@pagadaFactura');
+
+  Route::post('cliente/nuevo', 'HomeController@nuevoCliente');
+  Route::post('cliente/borrar', 'HomeController@borraCliente');
+
+  Route::post('jornada/guardar', 'HomeController@guardaJornada');
+  Route::post('hora/borrar', 'HomeController@borraHora');
+
+});
+
+Route::get('genera/{user_id?}/{dias?}', function($user_id = 0, $dias = 1) {
+
+  $fecha = date('Y-m-10 H:i:s');
+
+  $fecha = new DateTime();
+  $fecha->modify('+'.$dias.' day');
+  $fecha_format = $fecha->format('Y-m-d H:i:s');
+
+  if ($user_id) {
+    $user = App\User::find($user_id);
+      $user->access_token = encrypt($fecha->format('Y-m-d H:i:s'));
+    $user->save();
+
+    echo url('home/' . 1 . '/' . date('Y') . '/' . $user_id . '/' . $user->access_token);
+  } else {
+    echo "Falta el user";
+  }
+
+
+});
+
 
 // Route::get('migrationJornadasToHoras', function () {
 //
