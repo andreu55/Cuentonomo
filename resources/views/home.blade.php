@@ -8,21 +8,31 @@
       Acceso <b>concedido hasta</b> {{ $restante }} <i class="fas fa-exclamation-triangle text-danger fa-fw"></i>
     </div>
   @else
-    @if ($user->access_token)
-      <div class="text-muted">
-        <i class="fas fa-exclamation-triangle text-danger fa-fw"></i>
-        Concediendo acceso en
-        <input type="text" onclick="$(this).select();" class="form-control" value="{{ url('home/' . $trimestre . '/' . $year . '/' . $user->id . '/' . $user->access_token) }}">
+    {{-- Despublicar --}}
+    <div id="despublicar-group" class="input-group" style="<?= $user->access_token ? '' : 'display:none' ?>">
+      <input id="publicar_url" type="text" onclick="$(this).select();" class="form-control" value="{{ url('home/' . $trimestre . '/' . $year . '/' . $user->id . '/' . $user->access_token) }}">
+      <div class="input-group-append">
+        <button id="despublicar" class="btn btn-outline-secondary" type="button">Despublicar</button>
       </div>
-    @endif
+    </div>
+    {{-- Publicar --}}
+    <div id="publicar-group" class="input-group" style="<?= $user->access_token ? 'display:none' : '' ?>">
+      <div class="input-group-prepend">
+        <span class="input-group-text" style="background-color:#fff;border-color:#7c7c7c">Núm. días</span>
+      </div>
+      <input id="publicar_dias" type="text" onclick="$(this).select();" class="form-control" value="1">
+      <div class="input-group-append" title="Crear una url publica para compartir durante un tiempo">
+        <button id="publicar" class="btn btn-outline-secondary" type="button">Publicar</button>
+      </div>
+    </div>
   @endif
 @endsection
 
 @section('css')
   <style media="screen">
-  .my-left, .my-right { transition: all 0.5s ease }
-  /* .my-left { padding-right: 15px } */
-  /* .my-left:hover { padding-right: 20px } */
+  .ease { transition: all 0.5s ease }
+  /* .ease { padding-right: 15px } */
+  /* .ease:hover { padding-right: 20px } */
   .my-right:hover { padding-left: 15px }
   .table td, .table th { border-top:0 }
   </style>
@@ -60,11 +70,11 @@
               }
             @endphp
 
-            <a href="{{ url($url_aux_ant) }}" class="btn my-left">
+            <a href="{{ url($url_aux_ant) }}" class="btn">
               <i class="fas fa-angle-double-left fa-fw fa-2x" aria-hidden="true"></i>
             </a>
             {{ $trimestre }}º Trimestre {{ $year }}
-            <a href="{{ url($url_aux_sig) }}" class="btn my-right">
+            <a href="{{ url($url_aux_sig) }}" class="btn ease my-right">
               <i class="fas fa-angle-double-right fa-fw fa-2x" aria-hidden="true"></i>
             </a>
           </em>
@@ -130,11 +140,11 @@
                 <td>{{ $f->horas }} <small><em>x {{ $f->precio }}</em></small></td>
                 <td><b>{{ number_format($base, 2) }}</b></td>
                 <td>{{ number_format($iva, 2) }}</td>
-                <td>{{  $irpf  }}</td>
-                <td>{{  $total  }}</td>
+                <td>{{ $irpf }}</td>
+                <td>{{ $total }}</td>
                 <td class="float-right">
                   @if ($f->url_temp)
-                    <a href="{{ url( 'public/facturas/' . $user->id . '/' . $f->url_temp ) }}" target="_blank" class="text-info mr-1">
+                    <a href="{{ url('public/facturas/' . $user->id . '/' . $f->url_temp) }}" target="_blank" class="text-info mr-1">
                       <i class="fas fa-download"></i>
                     </a>
                   @endif
@@ -435,6 +445,56 @@
     });
     // }
 
+  });
+
+  $("#publicar").click(function() {
+
+    var btn = $(this);
+    var html_original = $(this).html();
+    btn.html('<i class="fas fa-sync-alt fa-fw fa-spin"></i>');
+
+    $.post('{{ url('publicar') }}',
+    {
+      _token: "{{ csrf_token() }}",
+      dias: $('#publicar_dias').val()
+    },
+    function(data, status) {
+      if (status == "success") {
+        if (data.token) {
+          btn.html('<i class="fa fa-fw fa-check"></i>');
+
+          url = '{{ url('home/' . $trimestre . '/' . $year . '/' . $user->id) }}' + '/' + data.token;
+
+          $('#publicar_url').val(url);
+          $('#despublicar-group').slideDown();
+          $('#publicar-group').slideUp("fast", function() {
+            btn.html(html_original);
+          });
+        }
+        // location.reload();
+      }
+    });
+  });
+
+  $("#despublicar").click(function() {
+
+    var btn = $(this);
+    var html_original = $(this).html();
+    btn.html('<i class="fas fa-sync-alt fa-fw fa-spin"></i>');
+
+    $.post('{{ url('publicar/borrar') }}',
+    {
+      _token: "{{ csrf_token() }}"
+    },
+    function(data, status) {
+      if (status == "success") {
+        btn.html('<i class="fa fa-fw fa-check"></i>');
+        $('#publicar-group').slideDown();
+        $('#despublicar-group').slideUp("fast", function() {
+          btn.html(html_original);
+        });
+      }
+    });
   });
 
   </script>

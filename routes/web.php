@@ -46,11 +46,12 @@ Route::group(['middleware' => ['auth']], function() {
   Route::post('jornada/guardar', 'HomeController@guardaJornada');
   Route::post('hora/borrar', 'HomeController@borraHora');
 
+  Route::post('publicar', 'HomeController@publicar');
+  Route::post('publicar/borrar', 'HomeController@despublicar');
+
 });
 
 Route::get('genera/{user_id?}/{dias?}', function($user_id = 0, $dias = 1) {
-
-  $fecha = date('Y-m-10 H:i:s');
 
   $fecha = new DateTime();
   $fecha->modify('+'.$dias.' day');

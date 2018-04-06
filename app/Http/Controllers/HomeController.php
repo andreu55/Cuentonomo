@@ -26,32 +26,38 @@ class HomeController extends Controller
       $user = Auth::user();
 
       if (!$user) {
-
-        if (!$tri || !$ano || !$user_id || !$token) {
-          return abort(404);
-        }
-
-        try {
-          $fecha_url = decrypt($token);
-        } catch (DecryptException $e) {
-          return abort(404);
-        }
-
-        Carbon::setLocale('es');
-
-        $fecha = Carbon::createFromFormat('Y-m-d H:i:s', $fecha_url);
-
-        if ($fecha->isFuture()) {
+        if ($tri && $ano && $user_id && $token) {
 
           $user = User::find($user_id);
-          $data['restante'] = $fecha->diffForHumans();
-          $data['invitado'] = 1;
-          $data['user_id_invitado'] = $user_id;
-          $data['access_token'] = $token;
 
-        } else {
-          return redirect('login');
-        }
+          if ($user->access_token && $token == $user->access_token) {
+
+            try {
+              $fecha_url = decrypt($token);
+            } catch (DecryptException $e) {
+              return abort(404);
+            }
+
+            Carbon::setLocale('es');
+
+            $fecha = Carbon::createFromFormat('Y-m-d H:i:s', $fecha_url);
+
+            if ($fecha->isFuture()) {
+
+              $data['restante'] = $fecha->diffForHumans();
+              $data['invitado'] = 1;
+              $data['user_id_invitado'] = $user_id;
+              $data['access_token'] = $token;
+
+            } else {
+
+              $user->access_token = null;
+              $user->save();
+
+              return redirect('login');
+            }
+          } else { return redirect('login'); }
+        } else { return abort(404); }
       }
 
       $trimestre = $tri ? $tri : trimestre(date('Y-m-d H:i:s'));
@@ -789,5 +795,31 @@ class HomeController extends Controller
 
         return back();
       }
+    }
+
+    public function publicar(Request $request) {
+
+      $dias = $request->dias ?? 1;
+
+      $fecha = new \DateTime();
+      $fecha->modify('+'.$dias.' day');
+      $fecha_format = $fecha->format('Y-m-d H:i:s');
+
+      $user = Auth::user();
+        $user->access_token = encrypt($fecha->format('Y-m-d H:i:s'));
+      $user->save();
+
+      $res['token'] = $user->access_token;
+
+      return response($res);
+    }
+
+    public function despublicar(Request $request) {
+
+      $user = Auth::user();
+        $user->access_token = null;
+      $user->save();
+
+      return response('OK');
     }
 }
