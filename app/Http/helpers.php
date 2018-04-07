@@ -12,8 +12,8 @@ function humanToSql($date) {
   return $dtemp->format('Y-m-d');
 }
 
-function trimestre($datetime)
-{
+function trimestre($datetime) {
+
   $mes = date("m",strtotime($datetime));
   $mes = is_null($mes) ? date('m') : $mes;
   $trim = floor(($mes-1) / 3)+1;
@@ -50,16 +50,23 @@ function traduceDia($dia) {
   return $dia;
 }
 
-function formatGasto($cantidad, $iva_tipo) {
+function formatGasto($cantidad, $tipo) {
 
   $res = '';
-  $base = round(($cantidad / (1 + $iva_tipo)), 2); // Sacamos la base sabiendo el iva y el total
-  $iva = round(($base * $iva_tipo), 2); // Con esa base, sacamos el iva del gasto
+  $base = round(($cantidad / (1 + $tipo->iva)), 2); // Sacamos la base sabiendo el iva y el total
+  $iva = round(($base * $tipo->iva), 2); // Con esa base, sacamos el iva del gasto
+  $percent = round(($iva * $tipo->percent), 2);
 
   $res .= '<b>' . number_format($cantidad, 2) . '€</b> = ';
-  $res .= '<span class="text-danger">' . number_format($base, 2) . '</span> <i class="fas fa-arrow-right fa-fw"></i> ';
+  $res .= '<span class="text-danger">' . number_format($base, 2) . '</span> <i class="fas fa-angle-right fa-fw"></i> ';
   $res .= '<b class="text-success">' . number_format($iva, 2) . '</b> ';
-  $res .= '<small>(' . number_format($iva_tipo, 2) . '%)</small><br>';
+  $res .= '<small>(' . $tipo->iva . '%)</small>';
+
+  if ($tipo->percent != 1) {
+    $res .= ' <i class="fas fa-angle-double-right fa-fw"></i> ';
+    $res .= '<b class="text-success">' . number_format($percent, 2) . '</b> ';
+    $res .= '<small>(' . $tipo->percent . '%)</small><br>';
+  }
 
   return $res;
 }

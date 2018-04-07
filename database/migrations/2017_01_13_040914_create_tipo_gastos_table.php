@@ -16,7 +16,9 @@ class CreateTipoGastosTable extends Migration
         Schema::create('tipo_gastos', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->string('iva');
+            $table->unsignedInteger('user_id')->nullable();
+            $table->unsignedDecimal('iva', 3, 2)->nullable();
+            $table->unsignedDecimal('percent', 3, 2)->nullable();
             $table->string('icon');
             $table->timestamps();
         });

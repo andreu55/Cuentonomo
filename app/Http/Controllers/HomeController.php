@@ -32,15 +32,16 @@ class HomeController extends Controller
 
           if ($user->access_token && $token == $user->access_token) {
 
-            try {
-              $fecha_url = decrypt($token);
-            } catch (DecryptException $e) {
-              return abort(404);
-            }
+            // try {
+            //   $fecha_url = decrypt($token);
+            // } catch (DecryptException $e) {
+            //   // Me parece que aqui ya no va a entrar nunca, porque comprobamos que sea la misma que el user, y esa nunca va a estar mal!
+            //   return abort(404, 'Parece que la url no es válida');
+            // }
 
             Carbon::setLocale('es');
 
-            $fecha = Carbon::createFromFormat('Y-m-d H:i:s', $fecha_url);
+            $fecha = Carbon::createFromFormat('Y-m-d H:i:s', decrypt($token));
 
             if ($fecha->isFuture()) {
 
@@ -54,10 +55,10 @@ class HomeController extends Controller
               $user->access_token = null;
               $user->save();
 
-              return redirect('login');
+              return abort(403, 'Este enlace ya no es válido!');
             }
-          } else { return redirect('login'); }
-        } else { return abort(404); }
+          } else { return abort(403, 'Parece que el usuario ha eliminado el acceso por esta url'); }
+        } else { return abort(404, 'Enlace incorrecto'); }
       }
 
       $trimestre = $tri ? $tri : trimestre(date('Y-m-d H:i:s'));

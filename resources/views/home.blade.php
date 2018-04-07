@@ -229,7 +229,7 @@
 
                 $cantidad_total += $g->cantidad;
                 $base_total_gastos += $base;
-                $iva_total_gastos += round(($base * $g->tipo_gasto->iva), 2); // Con esa base, sacamos el iva del gasto
+                $iva_total_gastos += round(($base * $g->tipo_gasto->iva * $g->tipo_gasto->percent), 2); // Con esa base, sacamos el iva del gasto
                 @endphp
 
                 <div class="article tipo_gasto-{{ $g->tipo_gasto_id }}" id="gasto<?=$g->id?>">
@@ -247,7 +247,7 @@
                           @endif
                         </h4>
                         <p>
-                          {!! formatGasto($g->cantidad, $g->tipo_gasto->iva) !!}
+                          {!! formatGasto($g->cantidad, $g->tipo_gasto) !!}
                         </p>
                       </div>
                     </div>
@@ -275,12 +275,14 @@
               </h5>
               {{-- <h6 class="card-subtitle mb-2 text-muted"><b>{{ $trimestre }}</b>º trimestre</h6> --}}
               <p class="card-text">Has recibido <b class="text-warning">{{ $iva_total }}€</b> en IVA este trimestre, puedes desgravarte <b class="text-success">{{ $iva_total_gastos }}€</b> gracias a los gastos, debes ingresar un total de:</p>
-              <h4 class="card-text mb-3"><b class="text-primary">{{ $iva_total - $iva_total_gastos }}€</b></h4>
-              <p class="card-text">
+              <h4 class="card-text mb-0 text-primary float-right">
+                {{ $iva_total - $iva_total_gastos }}€
+              </h4>
+              {{-- <p class="card-text">
                 <em>
                   Este total es diferente de los totales por tipo porque aquí hemos sumado los gastos ya redondeados.
                 </em>
-              </p>
+              </p> --}}
             </div>
           </div>
         @endif
@@ -288,8 +290,8 @@
         @foreach ($tipo_gastos as $tipo_gasto)
 
           @php
-            $aux = 'total_' . $tipo_gasto->id;
-            $tipo_gasto_percent_total = $tipo_gasto->total * $tipo_gasto->iva;
+            $base = ($tipo_gasto->total / (1 + $tipo_gasto->iva)); // Sacamos la base sabiendo el iva y el total
+            $tipo_gasto_percent_total = ($base * $tipo_gasto->iva) * $tipo_gasto->percent;
           @endphp
 
           @if ($tipo_gasto->total)
@@ -303,12 +305,17 @@
                 </h5>
                 <h6 class="card-subtitle mt-1 mb-1 text-muted">
 
-                  <span class="text-danger">{{ $tipo_gasto->total }}€</span>
-                  <span class="text-primary"> * {{ $tipo_gasto->iva }}%</span> =
-                  <span class="text-success"> {{ $tipo_gasto_percent_total }}</span>
+                  {{-- <span class="text-danger">{{ $tipo_gasto->total }}€</span>
+                  <span class="text-primary"> * {{ $tipo_gasto->iva }}%</span>
+                  @if ($tipo_gasto->percent != 1)
+                    <span class="text-primary"> * {{ $tipo_gasto->percent }}%</span>
+                  @endif
+                  = <span class="text-success"> {{ $tipo_gasto_percent_total }}</span>
+                  <br> --}}
 
+                  {!! formatGasto($tipo_gasto->total, $tipo_gasto) !!}
                 </h6>
-                <b class="text-success mb-0 float-right">
+                <b class="text-primary mb-0 float-right">
                   {{ number_format($tipo_gasto_percent_total, 2) }}€
                 </b>
               </div>
