@@ -181,7 +181,7 @@
 
     <div class="row">
 
-      <div class="col-md-8 col-md-offset-2">
+      <div class="col-md-7 col-md-offset-2">
 
         <div class="card mb-4">
           <div class="card-block">
@@ -262,7 +262,7 @@
         </div>
       </div>
 
-      <div class="col-md-4">
+      <div class="col-md-5">
 
         @if ($iva_total && $iva_total_gastos)
           <div class="card mb-2">
@@ -300,7 +300,7 @@
                 <h5 class="card-title">
                   {{ $tipo_gasto->name }}
                   <small class="float-right">
-                    Total <b>{{ $trimestre }}º</b> Tr.
+                    <b>{{ $trimestre }}º</b> Tr.
                   </small>
                 </h5>
                 <h6 class="card-subtitle mt-1 mb-1 text-muted">
