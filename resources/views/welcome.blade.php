@@ -62,6 +62,7 @@
     @endif
 
     <div class="content">
+      <img src="{{ asset('public/img/gnomo.svg') }}" alt="Gnómo!">
       <div class="title m-b-md"><i class="far fa-moon"></i>uentónomo</div>
       <div class="links"><a>Cuentas fáciles para los autónomos</a></div>
     </div>
