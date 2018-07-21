@@ -508,7 +508,7 @@ class HomeController extends Controller
         // if (!is_numeric($ultimo_char_nif)) { $ret_irpf = 0; }
 
         // Si es persona fisica no le retenemos irpf
-        $ret_irpf = $cliente->persona_fisica ? 0 : 1;
+        if ($cliente->persona_fisica) { $ret_irpf = 0; }
 
       	$precio = $request->precio;
 
