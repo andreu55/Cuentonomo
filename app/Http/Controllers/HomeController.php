@@ -503,10 +503,12 @@ class HomeController extends Controller
 
         $cliente = Client::find($request->cliente);
 
-      	$ultimo_char_nif = substr($cliente->nif, -1);
+        // Si no es numeric es una persona física (asique no le retenemos irpf)
+      	// $ultimo_char_nif = substr($cliente->nif, -1);
+        // if (!is_numeric($ultimo_char_nif)) { $ret_irpf = 0; }
 
-      	// Si no es numeric es una persona física (asique no le retenemos irpf)
-      	if (!is_numeric($ultimo_char_nif)) { $ret_irpf = 0; }
+        // Si es persona fisica no le retenemos irpf
+        $ret_irpf = $cliente->persona_fisica ? 0 : 1;
 
       	$precio = $request->precio;
 
@@ -688,25 +690,30 @@ class HomeController extends Controller
       PDF::writeHTML($html, true, false, true, false, '');
 
 
-      PDF::SetFont('times', 'BI', 14);
-      PDF::Cell(0, 0, 'Forma de pago', 0, 1, 'L', 0, '', 1);
+      // Si el usuario ha puesto cuenta bancaria
+      if ($user->banco_cuenta) {
 
-      PDF::SetFont('times', 'I', 13);
-      PDF::Cell(0, 0, 'Transferencia bancaria', 0, 1, 'L', 0, '', 1);
+        PDF::SetFont('times', 'BI', 14);
+        PDF::Cell(0, 0, 'Forma de pago', 0, 1, 'L', 0, '', 1);
 
-      PDF::Ln(5);
+        PDF::SetFont('times', 'I', 13);
+        PDF::Cell(0, 0, 'Transferencia bancaria', 0, 1, 'L', 0, '', 1);
 
-      // PDF::SetFont('times', 'BI', 14);
-      // PDF::Cell(0, 0, 'Cuenta bancaria de pago', 0, 1, 'L', 0, '', 1);
-      // PDF::Ln(2);
+        PDF::Ln(5);
 
-      PDF::SetFont('helvetica', 'B', 14);
-      PDF::Cell(0, 0, $user->banco_name, 0, 1, 'L', 0, '', 1);
+        // PDF::SetFont('times', 'BI', 14);
+        // PDF::Cell(0, 0, 'Cuenta bancaria de pago', 0, 1, 'L', 0, '', 1);
+        // PDF::Ln(2);
 
-      PDF::Ln(1);
+        PDF::SetFont('helvetica', 'B', 14);
+        PDF::Cell(0, 0, $user->banco_name, 0, 1, 'L', 0, '', 1);
 
-      PDF::SetFont('helvetica', '', 13);
-      PDF::Cell(0, 0, 'IBAN ' . $user->banco_cuenta, 0, 1, 'L', 0, '', 1);
+        PDF::Ln(1);
+
+        PDF::SetFont('helvetica', '', 13);
+        PDF::Cell(0, 0, 'IBAN ' . $user->banco_cuenta, 0, 1, 'L', 0, '', 1);
+      }
+
 
       //Close and output PDF document
       PDF::Output($nombre_pdf, 'I');
