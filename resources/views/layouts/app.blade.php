@@ -15,7 +15,7 @@
 	<meta name="author" content="Andreu garcía" />
 
 
-	<link rel="icon" href="images/favicon.ico">
+	<link rel="shortcut icon" href="{{ asset('public/img/gnomo.png') }}">
 
 
     <!-- Bootstrap core CSS -->

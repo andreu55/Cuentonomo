@@ -9,6 +9,8 @@
   <meta name='Description' content='Cuentas fáciles para los autónomos. Genera tus facturas.'>
   <meta name='Keywords' content='Cuentas, Facturas, Autónomo, Gratis'>
 
+  <link rel="shortcut icon" href="{{ asset('public/img/gnomo.png') }}">
+
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
   <script defer src="https://use.fontawesome.com/releases/v5.0.6/js/all.js"></script>
@@ -53,7 +55,7 @@
     @if (Route::has('login'))
       <div class="top-right links">
         @auth
-          <a href="{{ url('/home') }}">Home</a>
+          <a href="{{ url('home') }}">Home</a>
         @else
           <a href="{{ route('login') }}">Login</a>
           <a href="{{ route('register') }}">Register</a>
